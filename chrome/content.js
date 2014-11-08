@@ -1,5 +1,3 @@
-// // Putting Angular-pageslide-directive here because chrome is being stupid
-//
 var pageslideDirective = angular.module("pageslide-directive", []);
 
 pageslideDirective.directive('pageslide', [
