@@ -1,15 +1,28 @@
 <html ng-app='gDraft'>
 <head>
 </head>
-<body ng-controller='gDController'>
+<body style='height:100%; width:250px;' ng-controller='gDController'>
   <h1>Giraffe Draft</h1>
-  <div>
-  	{{person.name}}
+  <div style='height:65%;overflow:scroll;'>
+    Players
+    <ol>
+      <li class='undrafted' ng-repeat='player in players' ng-click=markDrafted()>
+        {{player.NAME}}
+      </li>
+    </ol>
   </div>
+  <button ng-click="calculate()"> Suggest </button>
   <br>
-  <button ng-click="calculate()"> Calculate </button>
+  <br/>
+  <div style='overflow:scroll;'>
+    Suggestions
+    <ol>
+      <li class='suggested' ng-repeat='suggested in suggestions'>
+        {{suggested.NAME}}
+      </li>
+    </ol>
+  </div>
   <script src="angular.js"></script>
   <script src="content.js"></script>
 </body>
 </html>
-	
