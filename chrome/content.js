@@ -25,7 +25,7 @@ pageslideDirective.directive('pageslide', [
                 /* parameters */
                 var param = {};
 
-                param.side = attrs.psSide || 'left';      // change default to slide from left because passing in a parameter isn't working
+                param.side = attrs.psSide || 'right';      // change default to slide from left because passing in a parameter isn't working
                 param.speed = attrs.psSpeed || '0.5';
                 param.size = attrs.psSize || '300px';
                 param.zindex = attrs.psZindex || 1000;
@@ -293,29 +293,80 @@ topBar.appendChild(toggler);
 //   <div id="slider">                                                 \
 //     {{person.name}}                                                 \
 //   </div>                                                            '
-//
+
 
 // Add the slider element
 var slider = document.createElement('div');
 slider.id = "slider";
+//slider.innerHTML = '<div ng-include="app.html"></div>';
+//slider.setAttribute('ng-include', "'app.html'");
+slider.innerHTML = "<h1>Giraffe Draft</h1> \
+  <div style='height:600px;overflow:scroll;'> \
+    Players \
+    <ol> \
+      <li class='undrafted' ng-repeat='player in undrafted' ng-click=markDrafted()> \
+        {{player.NAME}} \
+      </li> \
+    </ol> \
+  </div> \
+  <button ng-click='calculate()'> Suggest </button>\
+  <br> \
+  <br/> \
+  <div style='overflow:scroll;'> \
+    Suggestions \
+    <ol> \
+      <li class='suggested' ng-repeat='suggested in suggestions'> \
+        {{suggested.NAME}} \
+      </li> \
+    </ol> \
+  </div>";
 document.body.appendChild(slider);
+
 
 
 
 angular.module('gDraft', ['pageslide-directive'])
 
 .controller('gDController', function($scope, $http){
-	$scope.person = {
-		name: "Warren"
-	};
-	$scope.calculate = function(){
-		$http.get('http://giraffedraft.azurewebsites.net/api/init').
-		success(function(data, status, headers, config){
-			console.log(data)
-			$scope.person.name = data[0].NAME;
-		}).
-		error(function(data, status, headers, config){
-			console.log('failed!!!!!!!!!!!')
-		})
-	}
+  $scope.undrafted = [];
+  $scope.suggestions = [];
+  $scope.drafted = [];
+
+  $http.get('http://giraffedraft.azurewebsites.net/api/init').
+  success(function(data, status, headers, config){
+    $scope.undrafted = data;
+    $scope.calculate();
+
+  }).
+  error(function(data, status, headers, config){
+    console.log('failed!!!!!!!!!!!')
+  })
+
+  // $http.post('http://giraffedraft.azurewebsites.net/api/suggest', $scope.undrafted).
+  //   success(function(data, status, headers, config) {
+  //     $scope.suggestions = data;
+  //     console.log('initialized suggestions')
+  //   }).
+  //   error(function(data, status, headers, config) {
+  //     console.log('does not work');
+  //  });
+
+  $scope.calculate = function(){
+    $http.post('http://giraffedraft.azurewebsites.net/api/suggest', $scope.undrafted).
+    success(function(data, status, headers, config) {
+      $scope.suggestions = data;
+    }).
+    error(function(data, status, headers, config) {
+      console.log('does not work', $scope.undrafted);
+    });
+  }
+
+
+  $scope.markDrafted = function(){
+  	console.log('undrafted', this.player)
+    $scope.drafted.push(this.player)
+    var ind = $scope.undrafted.indexOf(this.player)
+    $scope.undrafted.splice(ind,1);
+    $scope.calculate();
+  }
 });
