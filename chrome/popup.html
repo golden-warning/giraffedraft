@@ -6,7 +6,7 @@
   <div style='height:65%;overflow:scroll;'>
     Players
     <ol>
-      <li class='undrafted' ng-repeat='player in players' ng-click=markDrafted()>
+      <li class='undrafted' ng-repeat='player in undrafted' ng-click=markDrafted()>
         {{player.NAME}}
       </li>
     </ol>
