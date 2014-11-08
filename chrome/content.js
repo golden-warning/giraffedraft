@@ -25,7 +25,7 @@ pageslideDirective.directive('pageslide', [
                 /* parameters */
                 var param = {};
 
-                param.side = attrs.psSide || 'right';
+                param.side = attrs.psSide || 'left';      // change default to slide from left because passing in a parameter isn't working
                 param.speed = attrs.psSpeed || '0.5';
                 param.size = attrs.psSize || '300px';
                 param.zindex = attrs.psZindex || 1000;
@@ -64,6 +64,8 @@ pageslideDirective.directive('pageslide', [
                 slider.style.width = 0;
                 slider.style.height = 0;
                 slider.style.transitionProperty = 'width, height';
+                // put background color here - move to styles.css?
+                slider.style.backgroundColor= 'white';
 
                 switch (param.side){
                     case 'right':
@@ -121,7 +123,7 @@ pageslideDirective.directive('pageslide', [
 
                 /* Open */
                 function psOpen(slider,param){
-                    if (slider.style.width !== 0 && slider.style.width !== 0){
+                    if (!$scope.psOpen ) {//(slider.style.width !== 0 && slider.style.width !== 0){
                         switch (param.side){
                             case 'right':
                                 slider.style.width = param.size;
@@ -141,6 +143,24 @@ pageslideDirective.directive('pageslide', [
                         },(param.speed * 1000));
 
                     }
+                    else {
+                        content.style.display = 'none';
+                        switch (param.side){
+                            case 'right':
+                                slider.style.width = '0px';
+                                break;
+                            case 'left':
+                                slider.style.width = '0px';
+                                break;
+                            case 'top':
+                                slider.style.height = '0px';
+                                break;
+                            case 'bottom':
+                                slider.style.height = '0px';
+                                break;
+                        }
+                    $scope.psOpen = false;
+                  }
                 }
 
                 function isFunction(functionToCheck){
@@ -233,20 +253,25 @@ pageslideDirective.directive('pageslide', [
 ]);
 //==============================================================================================
 
+// get the yahoo top menu bar
 var topBar = document.getElementById('yucs-top-list');
 console.log(topBar);
 
+// create an element to open the slider
 var toggler = document.createElement('li');
 var a = document.createElement('a');
 var linkText = document.createTextNode("GiraffeDraft");
 a.appendChild(linkText);
 a.title = "Giraffe Draft";
-a.href = "#";
-a.setAttribute('ng-click', 'calculate()');
+a.href = "#slider";
+a.setAttribute('pageslide', 'left');
+a.setAttribute('ps-zindex', '100000001');
+//a.setAttribute('ng-click', 'calculate()');
 toggler.appendChild(a);
 
 console.log(toggler);
 
+// add the slider toggler to the yahoo menu bar
 topBar.appendChild(toggler);
 
 // Add angular to the root HTML node
@@ -256,13 +281,26 @@ topBar.appendChild(toggler);
 
 
 // Add pageslide to the DOM
-var slider = document.createElement('pageslide');
-slider.setAttribute('ps-open', 'checked');
-var sliderHTML = "<div>{{person.name}}</div>";
+// var slider = document.createElement('pageslide');
+// slider.setAttribute('ps-open', 'checked');
+// slider.setAttribute('ps-zindex', '10000000');
+// slider.setAttribute('ps-size', '300px');
+// var sliderHTML = "<div>{{person.name}}</div>";
+//
+// slider.insertAdjacentHTML('afterbegin', sliderHTML);
 
-slider.insertAdjacentHTML('afterbegin', sliderHTML);
+// var sliderHTML = '\
+//   <div id="slider">                                                 \
+//     {{person.name}}                                                 \
+//   </div>                                                            '
+//
 
+// Add the slider element
+var slider = document.createElement('div');
+slider.id = "slider";
 document.body.appendChild(slider);
+
+
 
 angular.module('gDraft', ['pageslide-directive'])
 
