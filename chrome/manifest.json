@@ -13,7 +13,8 @@
     "content_scripts": [
       {
         "matches": ["http://*/*", "https://*/*"],
-        "js": ["content.js"]
+        "css": ["styles.css"],
+        "js": ["angular.js", "angular-pageslide-directive.js", "content.js"]
       }
     ]
 }
