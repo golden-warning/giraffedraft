@@ -1,5 +1,5 @@
-// Putting Angular-pageslide-directive here because chrome is being stupid
-
+// // Putting Angular-pageslide-directive here because chrome is being stupid
+//
 var pageslideDirective = angular.module("pageslide-directive", []);
 
 pageslideDirective.directive('pageslide', [
@@ -279,93 +279,17 @@ topBar.appendChild(toggler);
 // Add angular controller to body
 (document.body).setAttribute('ng-controller', 'gDController');
 
-
-// Add pageslide to the DOM
-// var slider = document.createElement('pageslide');
-// slider.setAttribute('ps-open', 'checked');
-// slider.setAttribute('ps-zindex', '10000000');
-// slider.setAttribute('ps-size', '300px');
-// var sliderHTML = "<div>{{person.name}}</div>";
-//
-// slider.insertAdjacentHTML('afterbegin', sliderHTML);
-
-// var sliderHTML = '\
-//   <div id="slider">                                                 \
-//     {{person.name}}                                                 \
-//   </div>                                                            '
-
-
 // Add the slider element
 var slider = document.createElement('div');
 slider.id = "slider";
-//slider.innerHTML = '<div ng-include="app.html"></div>';
-//slider.setAttribute('ng-include', "'app.html'");
-slider.innerHTML = "<h1>GIRAFFE DRAFT</h1> \
-  <div style='height:600px;overflow:scroll;'> \
-    PLAYERS \
-    <ol> \
-      <li class='undrafted' ng-repeat='player in undrafted' ng-click=markDrafted()> \
-        {{player.NAME}} \
-      </li> \
-    </ol> \
-  </div> \
-  <br> \
-  <br/> \
-  <div style='overflow:scroll;'> \
-    SUGGESTIONS \
-    <ol> \
-      <li class='suggested' ng-repeat='suggested in suggestions'> \
-        {{suggested.NAME}} \
-      </li> \
-    </ol> \
-  </div>";
+slider.style.height='100%';
+
+var url = chrome.extension.getURL("popup.html");
+console.log(typeof url);
+console.log(url);
+slider.innerHTML = '<object type="text/html" data="' + url + '" height="100%"></object>';
 document.body.appendChild(slider);
 
 
-
-
 angular.module('gDraft', ['pageslide-directive'])
-
-.controller('gDController', function($scope, $http){
-  $scope.undrafted = [];
-  $scope.suggestions = [];
-  $scope.drafted = [];
-
-  $http.get('http://giraffedraft.azurewebsites.net/api/init').
-  success(function(data, status, headers, config){
-    $scope.undrafted = data;
-    $scope.calculate();
-
-  }).
-  error(function(data, status, headers, config){
-    console.log('failed!!!!!!!!!!!')
-  })
-
-  // $http.post('http://giraffedraft.azurewebsites.net/api/suggest', $scope.undrafted).
-  //   success(function(data, status, headers, config) {
-  //     $scope.suggestions = data;
-  //     console.log('initialized suggestions')
-  //   }).
-  //   error(function(data, status, headers, config) {
-  //     console.log('does not work');
-  //  });
-
-  $scope.calculate = function(){
-    $http.post('http://giraffedraft.azurewebsites.net/api/suggest', $scope.undrafted).
-    success(function(data, status, headers, config) {
-      $scope.suggestions = data;
-    }).
-    error(function(data, status, headers, config) {
-      console.log('does not work', $scope.undrafted);
-    });
-  }
-
-
-  $scope.markDrafted = function(){
-    console.log('undrafted', this.player)
-    $scope.drafted.push(this.player)
-    var ind = $scope.undrafted.indexOf(this.player)
-    $scope.undrafted.splice(ind,1);
-    $scope.calculate();
-  }
-});
+.controller('gDController', function($scope, $http){});
