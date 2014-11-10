@@ -1,3 +1,15 @@
+;(function(){
+  'use strict';
+  /**
+   * Removes server error when user updates input
+   */
+  angular
+    .module('gDraft')
+    .directive('pageslide', calculate);
+
+  /* @inject */
+// Putting Angular-pageslide-directive here because chrome is being stupid
+
 var pageslideDirective = angular.module("pageslide-directive", []);
 
 pageslideDirective.directive('pageslide', [
@@ -249,45 +261,4 @@ pageslideDirective.directive('pageslide', [
         };
     }
 ]);
-//==============================================================================================
-
-// get the yahoo top menu bar
-var topBar = document.getElementById('yucs-top-list');
-console.log(topBar);
-
-// create an element to open the slider
-var toggler = document.createElement('li');
-var a = document.createElement('a');
-var linkText = document.createTextNode("GiraffeDraft");
-a.appendChild(linkText);
-a.title = "Giraffe Draft";
-a.href = "#slider";
-a.setAttribute('pageslide', 'left');
-a.setAttribute('ps-zindex', '100000001');
-//a.setAttribute('ng-click', 'calculate()');
-toggler.appendChild(a);
-
-console.log(toggler);
-
-// add the slider toggler to the yahoo menu bar
-topBar.appendChild(toggler);
-
-// Add angular to the root HTML node
-(document.documentElement).setAttribute('ng-app','gDraft');
-// Add angular controller to body
-(document.body).setAttribute('ng-controller', 'gDController');
-
-// Add the slider element
-var slider = document.createElement('div');
-slider.id = "slider";
-slider.style.height='100%';
-
-var url = chrome.extension.getURL("popup.html");
-console.log(typeof url);
-console.log(url);
-slider.innerHTML = '<object type="text/html" data="' + url + '" height="100%"></object>';
-document.body.appendChild(slider);
-
-
-angular.module('gDraft', ['pageslide-directive'])
-.controller('gDController', function($scope, $http){});
+}).call(this);
