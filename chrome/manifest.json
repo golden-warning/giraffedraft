@@ -13,8 +13,8 @@
     "content_scripts": [
       {
         "matches": ["http://*/*", "https://*/*"],
-        "js": ["angular.js", "pageslide.js", "content.js"]
+        "js": ["angular.js", "slider.js", "content.js"]
       }
     ],
-    "web_accessible_resources": ["app.html", "popup.html"],
+    "web_accessible_resources": ["app.html", "popup.html"]
 }

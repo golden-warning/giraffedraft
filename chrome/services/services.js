@@ -1,15 +1,29 @@
-angular.module('gDraft', ['pageslide-directive', 'gDraft.services'])
-  
-  $http.get('http://giraffedraft.azurewebsites.net/api/init').
-  success(function(data, status, headers, config){
-    $scope.undrafted = data;
-    $scope.allPlayers = angular.copy(data);
-    // for(var i = 0; i < undrafted.length; i++){
-    //   undrafted[i].drafted = false;
-    // }
-    $scope.calculate();
+;(function() {
+  "use strict";
 
-  }).
-  error(function(data, status, headers, config){
-    console.log('failed to get initial players')
-  })
+  angular
+    .module('gDraft.services', [])
+    .factory('init',
+
+      function ($http) {
+        function loadPlayers(players){
+        return $http.get('http://giraffedraft.azurewebsites.net/api/init').
+        then(function(data, status, headers, config) {
+          // .undrafted = data;
+          // .allPlayers = angular.copy(data);
+          // // for(var i = 0; i < undrafted.length; i++){
+          // //   undrafted[i].drafted = false;
+          // // }
+          // $scope.calculate();
+
+          return data.data;
+
+        });
+
+      }
+      return {
+        init: loadPlayers
+      };
+    });
+
+}).call(this);

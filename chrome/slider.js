@@ -1,19 +1,26 @@
-angular.module('gDPopup', [])
+angular.module('gDPopup', ['gDraft.services'])
 
-.controller('gDController', function($scope, $http){
+.controller('gDController', function($scope, $http, init){
+
+  console.log("lol waffle", init);
+
   $scope.undrafted = [];
   $scope.suggestions = [];
   $scope.drafted = [];
 
-  $http.get('http://giraffedraft.azurewebsites.net/api/init').
-  success(function(data, status, headers, config){
-    $scope.undrafted = data;
-    $scope.calculate();
+  // $http.get('http://giraffedraft.azurewebsites.net/api/init').
+  // // success(function(data, status, headers, config){
+  // //   $scope.undrafted = data;
+  // //   $scope.calculate();
 
-  }).
-  error(function(data, status, headers, config){
-    console.log('failed!!!!!!!!!!!')
-  })
+  // // }).
+  // error(function(data, status, headers, config){
+  //   console.log('failed!!!!!!!!!!!')
+  // })
+
+  init.init().then(function(data){
+    console.log(data);
+  });
 
   $scope.calculate = function(){
     $http.post('http://giraffedraft.azurewebsites.net/api/suggest', $scope.undrafted).
