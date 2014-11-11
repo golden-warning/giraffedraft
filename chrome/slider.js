@@ -1,6 +1,6 @@
 angular.module('gDPopup', ['gDraft.services'])
 
-.controller('gDController', function($scope, $http, init){
+.controller('gDController', function($scope, $http, services  ){
 
   $scope.undrafted = [];
   $scope.suggestions = [];
@@ -16,24 +16,20 @@ angular.module('gDPopup', ['gDraft.services'])
   //   console.log('failed!!!!!!!!!!!')
   // })
 
-  init.loadPlayers().then(function(data){
+  services.loadPlayers()
+  .then(function(data){
     $scope.undrafted = data;
-    // yeah boyyyeeeeee
     $scope.calculate();
   });
 
   $scope.calculate = function(){
-    $http.post('http://giraffedraft.azurewebsites.net/api/suggest', $scope.undrafted).
-    success(function(data, status, headers, config) {
-      $scope.suggestions = data;
-    }).
-    error(function(data, status, headers, config) {
-      console.log('does not work', $scope.undrafted);
-    });
+    services.getSuggestions($scope.undrafted)
+      .then(function(data){
+        $scope.suggestions = data;
+      })
   }
 
   $scope.markDrafted = function(){
-    console.log('undrafted', this.player)
     $scope.drafted.push(this.player)
     var ind = $scope.undrafted.indexOf(this.player)
     $scope.undrafted.splice(ind,1);
