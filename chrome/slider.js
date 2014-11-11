@@ -2,8 +2,6 @@ angular.module('gDPopup', ['gDraft.services'])
 
 .controller('gDController', function($scope, $http, init){
 
-  console.log("lol waffle", init);
-
   $scope.undrafted = [];
   $scope.suggestions = [];
   $scope.drafted = [];
@@ -18,8 +16,10 @@ angular.module('gDPopup', ['gDraft.services'])
   //   console.log('failed!!!!!!!!!!!')
   // })
 
-  init.init().then(function(data){
-    console.log(data);
+  init.loadPlayers().then(function(data){
+    $scope.undrafted = data;
+    // yeah boyyyeeeeee
+    $scope.calculate();
   });
 
   $scope.calculate = function(){
