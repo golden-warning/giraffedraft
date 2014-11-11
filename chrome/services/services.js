@@ -3,20 +3,31 @@
 
   angular
     .module('gDraft.services', [])
-    .factory('init',
+    .factory('services',
 
       function ($http) {
+
         function loadPlayers(players){
-        return $http.get('http://giraffedraft.azurewebsites.net/api/init').
-        then(function(data, status, headers, config) {
+	      return $http.get('http://giraffedraft.azurewebsites.net/api/init')
+	        .then(function(data, status, headers, config) {
 
-          return data.data;
+	        return data.data;
 
-        });
+	      });
 
-      }
+        }
+
+        function getSuggestions(undrafted){
+          return $http.post('http://giraffedraft.azurewebsites.net/api/suggest', undrafted)
+            .then(function(data, status, headers,config) {
+            	return data.data;
+            })
+
+        }
+
       return {
-        loadPlayers: loadPlayers
+        loadPlayers: loadPlayers,
+        getSuggestions: getSuggestions
       };
     });
 
