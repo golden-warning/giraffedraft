@@ -264,6 +264,10 @@ var linkText = document.createTextNode("GiraffeDraft");
 a.appendChild(linkText);
 a.title = "Giraffe Draft";
 a.href = "#slider";
+a.style.position = 'fixed';
+a.style.right = '30px';
+a.style.top = '30px';
+a.style.zIndex = '100000000';
 a.setAttribute('pageslide', 'left');
 a.setAttribute('ps-zindex', '100000001');
 //a.setAttribute('ng-click', 'calculate()');
@@ -272,7 +276,7 @@ toggler.appendChild(a);
 console.log(toggler);
 
 // add the slider toggler to the yahoo menu bar
-topBar.appendChild(toggler);
+document.body.appendChild(toggler);
 
 // Add angular to the root HTML node
 (document.documentElement).setAttribute('ng-app','gDraft');
@@ -301,28 +305,24 @@ slider.id = "slider";
 //slider.innerHTML = '<div ng-include="app.html"></div>';
 //slider.setAttribute('ng-include', "'app.html'");
 slider.innerHTML = "<h1>GIRAFFE DRAFT</h1> \
-  <div style='height:600px;overflow:scroll;'> \
-    PLAYERS \
-    <ol> \
-      <li class='undrafted' ng-repeat='player in undrafted' ng-click=markDrafted()> \
-        {{player.NAME}} \
-      </li> \
-    </ol> \
+  <div> \
+  <button ng-click='initialize()'>INITIALIZE</button> \
   </div> \
-  <br> \
-  <br/> \
-  <div style='overflow:scroll;'> \
+   <div style='overflow:scroll; font-color:black  '> \
     SUGGESTIONS \
     <ol> \
       <li class='suggested' ng-repeat='suggested in suggestions'> \
         {{suggested.NAME}} \
       </li> \
     </ol> \
-  </div>";
+  </div> \
+  <script src='slider.js'></script>";
 document.body.appendChild(slider);
 
 
-
+var click = function(){
+  document.querySelector('.NavTabs').childNodes[5].click();
+};
 
 angular.module('gDraft', ['pageslide-directive'])
 
@@ -330,6 +330,7 @@ angular.module('gDraft', ['pageslide-directive'])
   $scope.undrafted = [];
   $scope.suggestions = [];
   $scope.drafted = [];
+  $scope.state = {};
 
   $http.get('http://giraffedraft.azurewebsites.net/api/init').
   success(function(data, status, headers, config){
@@ -367,5 +368,27 @@ angular.module('gDraft', ['pageslide-directive'])
     var ind = $scope.undrafted.indexOf(this.player)
     $scope.undrafted.splice(ind,1);
     $scope.calculate();
+  }
+
+  $scope.getPlayers = function() {
+    document.querySelector('.NavTabs').childNodes[5].click();
+    document.querySelector('.SubNavTabs').children[1].click();
+
+    var players = document.getElementsByClassName('Fz-xs Ell');
+    console.log(players);
+    Array.prototype.slice.call(players).forEach(function(player) {
+      $scope.state[player.innerHTML] = [];
+    });
+  };
+
+  $scope.initialize = function() {
+    $scope.getPlayers();
+    console.log($scope.state);
+
+    document.querySelector('.NavTabs').childNodes[5].click();
+    document.querySelector('.SubNavTabs').children[0].click();
+
+    //click();
+  //  $scope.suggestions.push({NAME:document.querySelector('.NavTabs')});
   }
 });
