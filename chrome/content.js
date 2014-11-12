@@ -1,3 +1,5 @@
+// Putting Angular-pageslide-directive here because chrome is being stupid
+
 var pageslideDirective = angular.module("pageslide-directive", []);
 
 pageslideDirective.directive('pageslide', [
@@ -281,22 +283,25 @@ document.body.appendChild(toggler);
 // Add angular controller to body
 (document.body).setAttribute('ng-controller', 'gDController');
 
+
+// Add pageslide to the DOM
+// var slider = document.createElement('pageslide');
+// slider.setAttribute('ps-open', 'checked');
+// slider.setAttribute('ps-zindex', '10000000');
+// slider.setAttribute('ps-size', '300px');
+// var sliderHTML = "<div>{{person.name}}</div>";
+//
+// slider.insertAdjacentHTML('afterbegin', sliderHTML);
+
+// var sliderHTML = '\
+//   <div id="slider">                                                 \
+//     {{person.name}}                                                 \
+//   </div>                                                            '
+
+
 // Add the slider element
 var slider = document.createElement('div');
 slider.id = "slider";
-<<<<<<< HEAD
-slider.style.height='100%';
-
-var url = chrome.extension.getURL("popup.html");
-console.log(typeof url);
-console.log(url);
-slider.innerHTML = '<object type="text/html" data="' + url + '" height="100%"></object>';
-document.body.appendChild(slider);
-
-
-angular.module('gDraft', ['pageslide-directive'])
-.controller('gDController', function($scope, $http){});
-=======
 //slider.innerHTML = '<div ng-include="app.html"></div>';
 //slider.setAttribute('ng-include', "'app.html'");
 slider.innerHTML = "<h1>GIRAFFE DRAFT</h1> \
@@ -416,4 +421,3 @@ angular.module('gDraft', ['pageslide-directive'])
     document.querySelector('.Col2c').addEventListener('DOMNodeInserted', $scope.updateState);
   }
 });
->>>>>>> Added INITIALIZE button to slider, which retrieves player info into $scope.state
