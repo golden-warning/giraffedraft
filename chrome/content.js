@@ -382,11 +382,24 @@ angular.module('gDraft', ['pageslide-directive'])
   };
 
   $scope.initialize = function() {
+    // Populates fantasy players into state
     $scope.getPlayers();
     console.log($scope.state);
 
+    // Select the draft results tab
     document.querySelector('.NavTabs').childNodes[5].click();
     document.querySelector('.SubNavTabs').children[0].click();
+
+    var draft = document.querySelector('#results-by-round').querySelector('tbody').children;
+    Array.prototype.slice.call(draft).forEach(function(playerNode) {
+      if (playerNode.className !== 'drkTheme') {
+        var fantasyPlayer = playerNode.children[2].innerText.trim();        // Need to trim because of leading space before each player's name
+        //console.log('Fantasy player:', fantasyPlayer);
+        var draftedPlayer = playerNode.children[1].innerText;
+        $scope.state[fantasyPlayer].push(draftedPlayer);
+      }
+    });
+    console.log($scope.state);
 
     //click();
   //  $scope.suggestions.push({NAME:document.querySelector('.NavTabs')});
