@@ -1,10 +1,11 @@
 <html ng-app="gDPopup">
 <head>
+  <link rel="stylesheet" type="text/css" href="bower_components/angular-c3/dist/c3-chart.css">
     <LINK href="styles.css" rel="stylesheet" type="text/css">
 </head>
 <body ng-controller='gDController'>
   <h1>Giraffe Draft</h1>
-  <div style='height:65%;overflow:scroll;'>
+  <div style='height:15%;width:700px;overflow:scroll;'>
     Players
     <ol>
       <li class='undrafted' ng-repeat='player in undrafted' ng-click=markDrafted()>
@@ -14,15 +15,24 @@
   </div>
   <br>
   <br/>
-  <div style='overflow:scroll;'>
+  <div style='overflow:scroll;width:700px;'>
+    Team Stats
+    <ol>
+      <li class='teamStats' ng-repeat='stat in teamStats'>
+        {{stat}}
+      </li>
+    </ol>
+  </div>
+  <div style='overflow:scroll;width:700px;'>
     Suggestions
     <ol>
       <li class='suggested' ng-repeat='suggested in suggestions'>
-        {{suggested.NAME}}
+        {{$index}}
       </li>
     </ol>
   </div>
   <script src="angular.js"></script>
+  <script src="bower_components/angular-c3/dist/c3-chart.js" charset='utf-8'></script>
   <script src="services/services.js"></script>
   <script src="slider.js"></script>
 </body>
