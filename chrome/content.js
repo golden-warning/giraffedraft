@@ -262,6 +262,10 @@ var linkText = document.createTextNode("GiraffeDraft");
 a.appendChild(linkText);
 a.title = "Giraffe Draft";
 a.href = "#slider";
+a.style.position = 'fixed';
+a.style.right = '30px';
+a.style.top = '30px';
+a.style.zIndex = '100000000';
 a.setAttribute('pageslide', 'left');
 a.setAttribute('ps-zindex', '100000001');
 //a.setAttribute('ng-click', 'calculate()');
@@ -270,7 +274,7 @@ toggler.appendChild(a);
 console.log(toggler);
 
 // add the slider toggler to the yahoo menu bar
-topBar.appendChild(toggler);
+document.body.appendChild(toggler);
 
 // Add angular to the root HTML node
 (document.documentElement).setAttribute('ng-app','gDraft');
@@ -280,6 +284,7 @@ topBar.appendChild(toggler);
 // Add the slider element
 var slider = document.createElement('div');
 slider.id = "slider";
+<<<<<<< HEAD
 slider.style.height='100%';
 
 var url = chrome.extension.getURL("popup.html");
@@ -291,3 +296,95 @@ document.body.appendChild(slider);
 
 angular.module('gDraft', ['pageslide-directive'])
 .controller('gDController', function($scope, $http){});
+=======
+//slider.innerHTML = '<div ng-include="app.html"></div>';
+//slider.setAttribute('ng-include', "'app.html'");
+slider.innerHTML = "<h1>GIRAFFE DRAFT</h1> \
+  <div> \
+  <button ng-click='initialize()'>INITIALIZE</button> \
+  </div> \
+   <div style='overflow:scroll; font-color:black  '> \
+    SUGGESTIONS \
+    <ol> \
+      <li class='suggested' ng-repeat='suggested in suggestions'> \
+        {{suggested.NAME}} \
+      </li> \
+    </ol> \
+  </div> \
+  <script src='slider.js'></script>";
+document.body.appendChild(slider);
+
+
+var click = function(){
+  document.querySelector('.NavTabs').childNodes[5].click();
+};
+
+angular.module('gDraft', ['pageslide-directive'])
+
+.controller('gDController', function($scope, $http){
+  $scope.undrafted = [];
+  $scope.suggestions = [];
+  $scope.drafted = [];
+  $scope.state = {};
+
+  $http.get('http://giraffedraft.azurewebsites.net/api/init').
+  success(function(data, status, headers, config){
+    $scope.undrafted = data;
+    $scope.calculate();
+
+  }).
+  error(function(data, status, headers, config){
+    console.log('failed!!!!!!!!!!!')
+  })
+
+  // $http.post('http://giraffedraft.azurewebsites.net/api/suggest', $scope.undrafted).
+  //   success(function(data, status, headers, config) {
+  //     $scope.suggestions = data;
+  //     console.log('initialized suggestions')
+  //   }).
+  //   error(function(data, status, headers, config) {
+  //     console.log('does not work');
+  //  });
+
+  $scope.calculate = function(){
+    $http.post('http://giraffedraft.azurewebsites.net/api/suggest', $scope.undrafted).
+    success(function(data, status, headers, config) {
+      $scope.suggestions = data;
+    }).
+    error(function(data, status, headers, config) {
+      console.log('does not work', $scope.undrafted);
+    });
+  }
+
+
+  $scope.markDrafted = function(){
+    console.log('undrafted', this.player)
+    $scope.drafted.push(this.player)
+    var ind = $scope.undrafted.indexOf(this.player)
+    $scope.undrafted.splice(ind,1);
+    $scope.calculate();
+  }
+
+  $scope.getPlayers = function() {
+    document.querySelector('.NavTabs').childNodes[5].click();
+    document.querySelector('.SubNavTabs').children[1].click();
+
+    var players = document.getElementsByClassName('Fz-xs Ell');
+    console.log(players);
+    Array.prototype.slice.call(players).forEach(function(player) {
+      $scope.state[player.innerHTML] = [];
+    });
+  };
+
+  $scope.initialize = function() {
+    $scope.getPlayers();
+    console.log($scope.state);
+
+    document.querySelector('.NavTabs').childNodes[5].click();
+    document.querySelector('.SubNavTabs').children[0].click();
+
+    //click();
+  //  $scope.suggestions.push({NAME:document.querySelector('.NavTabs')});
+  }
+});
+>>>>>>> Added INITIALIZE button to slider, which retrieves player info into $scope.state
