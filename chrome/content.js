@@ -376,14 +376,30 @@ angular.module('gDraft', ['pageslide-directive'])
     });
   };
 
+  $scope.selectDraftResults = function() {
+    // Select the draft results tab
+    document.querySelector('.NavTabs').childNodes[5].click();
+    document.querySelector('.SubNavTabs').children[0].click();
+  }
+
+  $scope.updateState = function() {
+    $scope.selectDraftResults();
+    // Drafted player
+    var draftedPlayer = document.querySelector('#results-by-round').querySelector('tbody').children[1].children[1].innerText;
+    // Fantasy sports player
+    var fantasyPlayer = document.querySelector('#results-by-round').querySelector('tbody').children[1].children[2].innerText.trim();
+
+    $scope.state[fantasyPlayer].push(draftedPlayer);
+
+    console.log($scope.state);
+  };
+
   $scope.initialize = function() {
     // Populates fantasy players into state
     $scope.getPlayers();
     console.log($scope.state);
 
-    // Select the draft results tab
-    document.querySelector('.NavTabs').childNodes[5].click();
-    document.querySelector('.SubNavTabs').children[0].click();
+    $scope.selectDraftResults();
 
     var draft = document.querySelector('#results-by-round').querySelector('tbody').children;
     Array.prototype.slice.call(draft).forEach(function(playerNode) {
@@ -396,8 +412,8 @@ angular.module('gDraft', ['pageslide-directive'])
     });
     console.log($scope.state);
 
-    //click();
-  //  $scope.suggestions.push({NAME:document.querySelector('.NavTabs')});
+    // Set event listener to scrape the DOM
+    document.querySelector('.Col2c').addEventListener('DOMNodeInserted', $scope.updateState);
   }
 });
 >>>>>>> Added INITIALIZE button to slider, which retrieves player info into $scope.state
