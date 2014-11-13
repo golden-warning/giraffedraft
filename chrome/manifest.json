@@ -12,7 +12,7 @@
     },
     "content_scripts": [
       {
-        "matches": ["http://*/*", "https://*/*"],
+        "matches": ["http://*.yahoo.com/*"],
         "js": ["angular.js", "slider.js", "content.js"]
       }
     ],
