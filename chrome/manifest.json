@@ -12,7 +12,7 @@
     },
     "content_scripts": [
       {
-        "matches": ["http://*.yahoo.com/*"],
+        "matches": ["http://*sports.yahoo.com/*"],
         "js": ["angular.js", "slider.js", "content.js"]
       }
     ],
