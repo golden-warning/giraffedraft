@@ -5,18 +5,46 @@ angular.module('gDPopup', ['gDraft.services', 'angular-c3'])
   $scope.suggestions = [];
   $scope.drafted = [];
 
+  $scope.leagueAverages = {
+    "MIN":48*82,
+    "3PM":7.5*82,
+    "FG%":0.5,
+    "BLK":4.8*82,
+    "STL":7.2*82,
+    "AST":21.2*82,
+    "GP":82,
+    "REB":42.1*82,
+    "FT%":0.5,
+    "PTS":99.4*82,
+    "TO":14.9*82
+  };
+
   $scope.teamStats = {
-    "MIN":20,
-    "3PM":100,
-    "FG%":30,
-    "BLK":50,
-    "STL":40,
-    "AST":60,
-    "GP":70,
-    "REB":80,
-    "FT%":90,
-    "PTS":20,
-    "TO":20
+    "MIN":0,
+    "3PM":0,
+    "FG%":0,
+    "BLK":0,
+    "STL":0,
+    "AST":0,
+    "GP":0,
+    "REB":0,
+    "FT%":0,
+    "PTS":0,
+    "TO":0
+  };
+
+  $scope.playerStats = {
+    "MIN":0,
+    "3PM":0,
+    "FG%":0,
+    "BLK":0,
+    "STL":0,
+    "AST":0,
+    "GP":0,
+    "REB":0,
+    "FT%":0,
+    "PTS":0,
+    "TO":0
   };
 
   $scope.config = {
@@ -35,19 +63,44 @@ angular.module('gDPopup', ['gDraft.services', 'angular-c3'])
           $scope.teamStats['FT%'],
           $scope.teamStats.PTS,
           $scope.teamStats.TO
+        ],
+        [
+          'playerStats',
+          $scope.playerStats.MIN,
+          $scope.playerStats['3PM'],
+          $scope.playerStats['FG%'],
+          $scope.playerStats.BLK,
+          $scope.playerStats.STL,
+          $scope.playerStats.AST,
+          $scope.playerStats.GP,
+          $scope.playerStats.REB,
+          $scope.playerStats['FT%'],
+          $scope.playerStats.PTS,
+          $scope.playerStats.TO
         ]
       ],
       type: 'bar',
       groups: [
-        []
+        ['playerStats', 'teamStats']
       ]
     },
     axis: {
-      rotated: true
+      x: {
+        height:60,
+        max: 11,
+        type: 'category', 
+        tick:{
+          rotate:90
+        },
+        categories: ['MIN', '3PM', 'FG%', 'BLK','STL','AST','GP','REB','FT%','PTS','TO']
+      },
+      y: {
+        max: 1000
+      }
     },
     size: {
-      height: '400',
-      width: '400'
+      height: '600',
+      width: '250'
     }
 
   };
@@ -68,15 +121,15 @@ angular.module('gDPopup', ['gDraft.services', 'angular-c3'])
   .then(function(data){
     console.log(data);
     $scope.undrafted = data;
-    $scope.calculate();
+    // $scope.calculate();
   });
 
-  $scope.calculate = function(){
-    services.getSuggestions($scope.undrafted)
-      .then(function(data){
-        $scope.suggestions = data;
-      })
-  }
+  // $scope.calculate = function(){
+  //   services.getSuggestions($scope.undrafted)
+  //     .then(function(data){
+  //       $scope.suggestions = data;
+  //     })
+  // }
 
   $scope.markDrafted = function(){
     $scope.drafted.push(this.player)
@@ -111,7 +164,41 @@ angular.module('gDPopup', ['gDraft.services', 'angular-c3'])
       });
     });
 
-    $scope.calculate();
+    // $scope.calculate();
+  }
+
+  $scope.addPlayerStats = function(){
+    $scope.playerStats = this.player
+    console.log(this.player)
+    c3Factory.get('chart').then(function(chart) {
+      chart.load({
+        columns: [
+          [
+            'playerStats',
+            $scope.playerStats.MIN,
+            $scope.playerStats['3PM'],
+            $scope.playerStats['FG%'],
+            $scope.playerStats.BLK,
+            $scope.playerStats.STL,
+            $scope.playerStats.AST,
+            $scope.playerStats.GP,
+            $scope.playerStats.REB,
+            $scope.playerStats['FT%'],
+            $scope.playerStats.PTS,
+            $scope.playerStats.TO
+          ]
+        ],
+      });
+    });
+  }
+
+  $scope.removePlayerStats = function(){
+    $scope.playerStats = {};
+    c3Factory.get('chart').then(function(chart) {
+      chart.unload({
+        ids:['playerStats']
+      });
+    });
   }
 
   // var svg = d3.select("body").append("svg")

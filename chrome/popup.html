@@ -5,32 +5,23 @@
 </head>
 <body ng-controller='gDController'>
   <h1>Giraffe Draft</h1>
-  <div style='height:15%;width:700px;overflow:scroll;'>
-    Players
+  <div style='height:15%;width:200px;overflow:scroll;' ng-mouseleave="removePlayerStats()">
     <ol>
-      <li class='undrafted' ng-repeat='player in undrafted' ng-click=markDrafted()>
+      <li class='undrafted' ng-repeat='player in undrafted' ng-click="markDrafted()" ng-mouseenter="addPlayerStats()">
         {{player.NAME}}
       </li>
     </ol>
   </div>
   <br>
   <br/>
-  <div style='overflow:scroll;width:700px;'>
-    Team Stats
-    <ol>
-      <li class='teamStats' ng-repeat='stat in teamStats'>
-        {{stat}}
-      </li>
-    </ol>
-  </div>
-  <div style='overflow:scroll;width:700px;'>
+  <!-- <div style='width:275px'>
     Suggestions
     <ol>
       <li class='suggested' ng-repeat='suggested in suggestions'>
-        {{$index}}
+        {{suggested.Player}}
       </li>
     </ol>
-  </div>
+  </div> -->
   <c3-chart id="chart" config="config"></c3-chart>
   <script src="angular.js"></script>
   <script src="bower_components/angular-c3/dist/c3-chart.js" charset='utf-8'></script>
