@@ -1,3 +1,5 @@
+// Putting Angular-pageslide-directive here because chrome is being stupid
+
 var pageslideDirective = angular.module("pageslide-directive", []);
 
 pageslideDirective.directive('pageslide', [
@@ -262,6 +264,10 @@ var linkText = document.createTextNode("GiraffeDraft");
 a.appendChild(linkText);
 a.title = "Giraffe Draft";
 a.href = "#slider";
+a.style.position = 'fixed';
+a.style.right = '30px';
+a.style.top = '30px';
+a.style.zIndex = '100000000';
 a.setAttribute('pageslide', 'left');
 a.setAttribute('ps-zindex', '100000001');
 //a.setAttribute('ng-click', 'calculate()');
@@ -270,24 +276,148 @@ toggler.appendChild(a);
 console.log(toggler);
 
 // add the slider toggler to the yahoo menu bar
-topBar.appendChild(toggler);
+document.body.appendChild(toggler);
 
 // Add angular to the root HTML node
 (document.documentElement).setAttribute('ng-app','gDraft');
 // Add angular controller to body
 (document.body).setAttribute('ng-controller', 'gDController');
 
+
+// Add pageslide to the DOM
+// var slider = document.createElement('pageslide');
+// slider.setAttribute('ps-open', 'checked');
+// slider.setAttribute('ps-zindex', '10000000');
+// slider.setAttribute('ps-size', '300px');
+// var sliderHTML = "<div>{{person.name}}</div>";
+//
+// slider.insertAdjacentHTML('afterbegin', sliderHTML);
+
+// var sliderHTML = '\
+//   <div id="slider">                                                 \
+//     {{person.name}}                                                 \
+//   </div>                                                            '
+
+
 // Add the slider element
 var slider = document.createElement('div');
 slider.id = "slider";
-slider.style.height='100%';
-
-var url = chrome.extension.getURL("popup.html");
-console.log(typeof url);
-console.log(url);
-slider.innerHTML = '<object type="text/html" data="' + url + '" height="100%"></object>';
+//slider.innerHTML = '<div ng-include="app.html"></div>';
+//slider.setAttribute('ng-include', "'app.html'");
+slider.innerHTML = "<h1>GIRAFFE DRAFT</h1> \
+  <div> \
+  <button ng-click='initialize()'>INITIALIZE</button> \
+  </div> \
+   <div style='overflow:scroll; font-color:black  '> \
+    SUGGESTIONS \
+    <ol> \
+      <li class='suggested' ng-repeat='suggested in suggestions'> \
+        {{suggested.NAME}} \
+      </li> \
+    </ol> \
+  </div> \
+  <script src='slider.js'></script>";
 document.body.appendChild(slider);
 
 
+var click = function(){
+  document.querySelector('.NavTabs').childNodes[5].click();
+};
+
 angular.module('gDraft', ['pageslide-directive'])
-.controller('gDController', function($scope, $http){});
+
+.controller('gDController', function($scope, $http){
+  $scope.undrafted = [];
+  $scope.suggestions = [];
+  $scope.drafted = [];
+  $scope.state = {};
+
+  $http.get('http://giraffedraft.azurewebsites.net/api/init').
+  success(function(data, status, headers, config){
+    $scope.undrafted = data;
+    $scope.calculate();
+
+  }).
+  error(function(data, status, headers, config){
+    console.log('failed!!!!!!!!!!!')
+  })
+
+  // $http.post('http://giraffedraft.azurewebsites.net/api/suggest', $scope.undrafted).
+  //   success(function(data, status, headers, config) {
+  //     $scope.suggestions = data;
+  //     console.log('initialized suggestions')
+  //   }).
+  //   error(function(data, status, headers, config) {
+  //     console.log('does not work');
+  //  });
+
+  $scope.calculate = function(){
+    $http.post('http://giraffedraft.azurewebsites.net/api/suggest', $scope.undrafted).
+    success(function(data, status, headers, config) {
+      $scope.suggestions = data;
+    }).
+    error(function(data, status, headers, config) {
+      console.log('does not work', $scope.undrafted);
+    });
+  }
+
+
+  $scope.markDrafted = function(){
+    console.log('undrafted', this.player)
+    $scope.drafted.push(this.player)
+    var ind = $scope.undrafted.indexOf(this.player)
+    $scope.undrafted.splice(ind,1);
+    $scope.calculate();
+  }
+
+  $scope.getPlayers = function() {
+    document.querySelector('.NavTabs').childNodes[5].click();
+    document.querySelector('.SubNavTabs').children[1].click();
+
+    var players = document.getElementsByClassName('Fz-xs Ell');
+    console.log(players);
+    Array.prototype.slice.call(players).forEach(function(player) {
+      $scope.state[player.innerHTML] = [];
+    });
+  };
+
+  $scope.selectDraftResults = function() {
+    // Select the draft results tab
+    document.querySelector('.NavTabs').childNodes[5].click();
+    document.querySelector('.SubNavTabs').children[0].click();
+  }
+
+  $scope.updateState = function() {
+    $scope.selectDraftResults();
+    // Drafted player
+    var draftedPlayer = document.querySelector('#results-by-round').querySelector('tbody').children[1].children[1].innerText;
+    // Fantasy sports player
+    var fantasyPlayer = document.querySelector('#results-by-round').querySelector('tbody').children[1].children[2].innerText.trim();
+
+    $scope.state[fantasyPlayer].push(draftedPlayer);
+
+    console.log($scope.state);
+  };
+
+  $scope.initialize = function() {
+    // Populates fantasy players into state
+    $scope.getPlayers();
+    console.log($scope.state);
+
+    $scope.selectDraftResults();
+
+    var draft = document.querySelector('#results-by-round').querySelector('tbody').children;
+    Array.prototype.slice.call(draft).forEach(function(playerNode) {
+      if (playerNode.className !== 'drkTheme') {
+        var fantasyPlayer = playerNode.children[2].innerText.trim();        // Need to trim because of leading space before each player's name
+        //console.log('Fantasy player:', fantasyPlayer);
+        var draftedPlayer = playerNode.children[1].innerText;
+        $scope.state[fantasyPlayer].push(draftedPlayer);
+      }
+    });
+    console.log($scope.state);
+
+    // Set event listener to scrape the DOM
+    document.querySelector('.Col2c').addEventListener('DOMNodeInserted', $scope.updateState);
+  }
+});
