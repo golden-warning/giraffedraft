@@ -5,13 +5,17 @@
 </head>
 <body ng-controller='gDController'>
   <h1>Giraffe Draft</h1>
-  <div style='height:15%;width:200px;overflow:scroll;' ng-mouseleave="removePlayerStats()">
-    <ol>
-      <li class='undrafted' ng-repeat='player in undrafted' ng-click="markDrafted()" ng-mouseenter="addPlayerStats()">
-        {{player.NAME}}
-      </li>
-    </ol>
+  <div style='height:15%;width:275px;overflow:scroll;' ng-mouseleave="removePlayerStats()">
+    <table style ='border: 1px solid black;border-collapse: collapse;'>
+      <tr class='undrafted' ng-repeat='player in undrafted' ng-click="markDrafted()" ng-mouseenter="addPlayerStats()">
+        <td style ='border: 1px solid black;border-collapse: collapse;'>{{player.Player}}</td>
+      </tr>
+    </table>
   </div>
+  <table>
+    <tr><td>stuff</td></tr>
+    <tr><td>more stuff</td></tr>
+  </table>
   <br>
   <br/>
   <!-- <div style='width:275px'>
