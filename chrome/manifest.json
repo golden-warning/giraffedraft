@@ -12,8 +12,8 @@
     },
     "content_scripts": [
       {
-        //"matches": ["http://*.yahoo.com/*", "https://*.yahoo.com/*"],
-        "matches": ["<all_urls>"],
+        "matches": ["http://*.yahoo.com/*"],
+        //"matches": ["<all_urls>"],
         "js": ["angular.js", "content.js"]
       }
     ],
