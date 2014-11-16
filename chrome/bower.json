@@ -1,0 +1,21 @@
+{
+  "name": "giraffedraft",
+  "version": "0.0.0",
+  "homepage": "https://github.com/golden-warning/giraffedraft",
+  "authors": [
+    "golden-warning"
+  ],
+  "description": "Fantasy Basketball Draft Assistant",
+  "main": "content.js",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular-c3": "~0.0.7"
+  }
+}

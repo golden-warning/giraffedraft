@@ -1,293 +1,190 @@
-var pageslideDirective = angular.module("pageslide-directive", []);
-
-pageslideDirective.directive('pageslide', [
-    function (){
-        var defaults = {};
-
-        /* Return directive definition object */
-
-        return {
-            restrict: "EA",
-            replace: false,
-            transclude: false,
-            scope: {
-                psOpen: "=?",
-                psAutoClose: "=?"
-            },
-            link: function ($scope, el, attrs) {
-                /* Inspect */
-                //console.log($scope);
-                //console.log(el);
-                //console.log(attrs);
-
-                /* parameters */
-                var param = {};
-
-                param.side = attrs.psSide || 'right';      // change default to slide from left because passing in a parameter isn't working
-                param.speed = attrs.psSpeed || '0.5';
-                param.size = attrs.psSize || '300px';
-                param.zindex = attrs.psZindex || 1000;
-                param.className = attrs.psClass || 'ng-pageslide';
-
-                /* DOM manipulation */
-                var content = null;
-                var slider = null;
-
-                if (!attrs.href && el.children() && el.children().length) {
-                    content = el.children()[0];
-                } else {
-
-                    var targetId = (attrs.href || attrs.psTarget).substr(1);
-                    content = document.getElementById(targetId);
-                    slider = document.getElementById('pageslide-target-' + targetId);
-
-                    if (!slider) {
-                        slider = document.createElement('div');
-                        slider.id = 'pageslide-target-' + targetId;
-                    }
-                }
-
-                // Check for content
-                if (!content)
-                    throw new Error('You have to elements inside the <pageslide> or you have not specified a target href');
-
-                slider = slider || document.createElement('div');
-                slider.className = param.className;
-
-                /* Style setup */
-                slider.style.transitionDuration = param.speed + 's';
-                slider.style.webkitTransitionDuration = param.speed + 's';
-                slider.style.zIndex = param.zindex;
-                slider.style.position = 'fixed';
-                slider.style.width = 0;
-                slider.style.height = 0;
-                slider.style.transitionProperty = 'width, height';
-                // put background color here - move to styles.css?
-                slider.style.backgroundColor= 'white';
-
-                switch (param.side){
-                    case 'right':
-                        slider.style.height = attrs.psCustomHeight || '100%';
-                        slider.style.top = attrs.psCustomTop ||  '0px';
-                        slider.style.bottom = attrs.psCustomBottom ||  '0px';
-                        slider.style.right = attrs.psCustomRight ||  '0px';
-                        break;
-                    case 'left':
-                        slider.style.height = attrs.psCustomHeight || '100%';
-                        slider.style.top = attrs.psCustomTop || '0px';
-                        slider.style.bottom = attrs.psCustomBottom || '0px';
-                        slider.style.left = attrs.psCustomLeft || '0px';
-                        break;
-                    case 'top':
-                        slider.style.width = attrs.psCustomWidth || '100%';
-                        slider.style.left = attrs.psCustomLeft || '0px';
-                        slider.style.top = attrs.psCustomTop || '0px';
-                        slider.style.right = attrs.psCustomRight || '0px';
-                        break;
-                    case 'bottom':
-                        slider.style.width = attrs.psCustomWidth || '100%';
-                        slider.style.bottom = attrs.psCustomBottom || '0px';
-                        slider.style.left = attrs.psCustomLeft || '0px';
-                        slider.style.right = attrs.psCustomRight || '0px';
-                        break;
-                }
+// Insert iFrame referencing popup.html
+var iframe = document.createElement('iframe');
+iframe.src = chrome.extension.getURL("popup.html");
+iframe.id = 'giraffedraft';
+iframe.align = 'right';
+iframe.width = '300';
+iframe.height = '100%';
+iframe.style.position = "fixed";
+iframe.style.top = '0px';
+iframe.style.right = '0px';
+iframe.style.zIndex = '10000000000';
+iframe.style.backgroundColor = 'white';
+document.body.appendChild(iframe);
 
 
-                /* Append */
-                document.body.appendChild(slider);
-                slider.appendChild(content);
+var undrafted = [];
+var suggestions = [];
+var drafted = [];
+var state = {};
+var allStats = {};
 
-                /* Closed */
-                function psClose(slider,param){
-                    if (slider && slider.style.width !== 0 && slider.style.width !== 0){
-                        content.style.display = 'none';
-                        switch (param.side){
-                            case 'right':
-                                slider.style.width = '0px';
-                                break;
-                            case 'left':
-                                slider.style.width = '0px';
-                                break;
-                            case 'top':
-                                slider.style.height = '0px';
-                                break;
-                            case 'bottom':
-                                slider.style.height = '0px';
-                                break;
-                        }
-                    }
-                    $scope.psOpen = false;
-                }
+var sendState = function() {
+  var w = document.querySelector('#giraffedraft').contentWindow;
+  w.postMessage({state: state}, '*');
+};
 
-                /* Open */
-                function psOpen(slider,param){
-                    if (!$scope.psOpen ) {//(slider.style.width !== 0 && slider.style.width !== 0){
-                        switch (param.side){
-                            case 'right':
-                                slider.style.width = param.size;
-                                break;
-                            case 'left':
-                                slider.style.width = param.size;
-                                break;
-                            case 'top':
-                                slider.style.height = param.size;
-                                break;
-                            case 'bottom':
-                                slider.style.height = param.size;
-                                break;
-                        }
-                        setTimeout(function(){
-                            content.style.display = 'block';
-                        },(param.speed * 1000));
+var sendUser = function() {
+  var w = document.querySelector('#giraffedraft').contentWindow;
+  // not working, why?
+  //var user = document.querySelector('#fixed-pick').querySelector('.Ell').innerText;
+  var user = 'Walter';
+  console.log("sending user:", user);
+  w.postMessage({user: user}, '*');
+};
 
-                    }
-                    else {
-                        content.style.display = 'none';
-                        switch (param.side){
-                            case 'right':
-                                slider.style.width = '0px';
-                                break;
-                            case 'left':
-                                slider.style.width = '0px';
-                                break;
-                            case 'top':
-                                slider.style.height = '0px';
-                                break;
-                            case 'bottom':
-                                slider.style.height = '0px';
-                                break;
-                        }
-                    $scope.psOpen = false;
-                  }
-                }
+var click = function(){
+  document.querySelector('.NavTabs').childNodes[5].click();
+};
 
-                function isFunction(functionToCheck){
-                    var getType = {};
-                    return functionToCheck && getType.toString.call(functionToCheck) === '[object Function]';
-                }
+// var getUserName = function() {
+//   document.querySelector('#fixed-pick').querySelector('.Ell').innerText;
+// };
 
-                /*
-                * Watchers
-                * */
+var getPlayers = function() {
+  document.querySelector('.NavTabs').childNodes[5].click();
+  document.querySelector('.SubNavTabs').children[1].click();
 
-                if(attrs.psSize){
-                    $scope.$watch(function(){
-                        return attrs.psSize;
-                    }, function(newVal,oldVal) {
-                        param.size = newVal;
-                        if($scope.psOpen) {
-                            psOpen(slider,param);
-                        }
-                    });
-                }
+  var players = document.getElementsByClassName('Fz-xs Ell');
+  //console.log(players);
+  Array.prototype.slice.call(players).forEach(function(player) {
+    state[player.innerHTML] = {};
+  });
+};
 
-                $scope.$watch("psOpen", function (value){
-                    if (!!value) {
-                        // Open
-                        psOpen(slider,param);
-                    } else {
-                        // Close
-                        psClose(slider,param);
-                    }
-                });
+var selectDraftResults = function() {
+  // Select the draft results tab
+  document.querySelector('.NavTabs').childNodes[5].click();
+  document.querySelector('.SubNavTabs').children[0].click();
+};
 
-                // close panel on location change
-                if($scope.psAutoClose){
-                    $scope.$on("$locationChangeStart", function(){
-                        psClose(slider, param);
-                        if(isFunction($scope.psAutoClose)) {
-                            $scope.psAutoClose();
-                        }
-                    });
-                    $scope.$on("$stateChangeStart", function(){
-                        psClose(slider, param);
-                        if(isFunction($scope.psAutoClose)) {
-                            $scope.psAutoClose();
-                        }
-                    });
-                }
+var updateState = function() {
+  // selectDraftResults();
+  // // Drafted player
+  // var draftedPlayer = document.querySelector('#results-by-round').querySelector('tbody').children[1].children[1].innerText;
+  // // Fantasy sports player
+  // var fantasyPlayer = document.querySelector('#results-by-round').querySelector('tbody').children[1].children[2].innerText.trim();
+  //
+  // state[fantasyPlayer].push(draftedPlayer);
+  //
+  // //console.log(state);
+  // sendState();
+};
+
+var getPlayerStats = function() {
+  // select player tab
+  document.querySelector('.NavTabs').childNodes[1].click();
+
+  // click 'show drafted'
+  // should check if already clicked.
+  document.querySelector('#show-drafted').click();
 
 
+  // get players list
+  var players = document.querySelector('.player-listing-table').querySelector('tbody').children;
 
-                /*
-                * Events
-                * */
+  // get stat categories
+  var statCategoriesNode = document.querySelector('.player-listing-table').querySelector('thead').children[0].children;
 
-                $scope.$on('$destroy', function() {
-                    document.body.removeChild(slider);
-                });
+  var statCategories = [];
+  for (var i = 2; i < statCategoriesNode.length-1; i++) {
+    //debugger;
+    var stat = statCategoriesNode[i].querySelector('div').innerText;
+    statCategories.push(stat);
+  }
 
-                var close_handler = (attrs.href) ? document.getElementById(attrs.href.substr(1) + '-close') : null;
-                if (el[0].addEventListener) {
-                    el[0].addEventListener('click',function(e){
-                        e.preventDefault();
-                        psOpen(slider,param);
-                    });
+  console.log(statCategories);
 
-                    if (close_handler){
-                        close_handler.addEventListener('click', function(e){
-                            e.preventDefault();
-                            psClose(slider,param);
-                        });
-                    }
-                } else {
-                    // IE8 Fallback code
-                    el[0].attachEvent('onclick',function(e){
-                        e.returnValue = false;
-                        psOpen(slider,param);
-                    });
+  // fill out allStats table
+  Array.prototype.slice.call(players).forEach(function(player) {
+    //console.log(player);
 
-                    if (close_handler){
-                        close_handler.attachEvent('onclick', function(e){
-                            e.returnValue = false;
-                            psClose(slider,param);
-                        });
-                    }
-                }
-
-            }
-        };
+    // get player name
+    var playerName = player.children[1].innerText.slice(3);
+    var stats = {};
+    // first index is ID
+    // second index is player name
+    // last index is extra td
+    for (var i = 2; i < player.children.length-1; i++) {
+      stats[statCategories[i-2]] = player.children[i].innerText;
     }
-]);
-//==============================================================================================
+    allStats[playerName] = stats;
+  });
 
-// get the yahoo top menu bar
-var topBar = document.getElementById('yucs-top-list');
-console.log(topBar);
+  console.log(allStats);
+  console.log(allStats.length);
 
-// create an element to open the slider
-var toggler = document.createElement('li');
-var a = document.createElement('a');
-var linkText = document.createTextNode("GiraffeDraft");
-a.appendChild(linkText);
-a.title = "Giraffe Draft";
-a.href = "#slider";
-a.setAttribute('pageslide', 'left');
-a.setAttribute('ps-zindex', '100000001');
-//a.setAttribute('ng-click', 'calculate()');
-toggler.appendChild(a);
+};
 
-console.log(toggler);
+var initialize = function() {
+  // Populates fantasy players into state
+  getPlayers();
+  //console.log(state);
 
-// add the slider toggler to the yahoo menu bar
-topBar.appendChild(toggler);
+  selectDraftResults();
 
-// Add angular to the root HTML node
-(document.documentElement).setAttribute('ng-app','gDraft');
-// Add angular controller to body
-(document.body).setAttribute('ng-controller', 'gDController');
+  var draft = document.querySelector('#results-by-round').querySelector('tbody').children;
+  Array.prototype.slice.call(draft).forEach(function(playerNode) {
+    if (playerNode.className !== 'drkTheme') {
+      // grab stats:
+      // click on player
+      playerNode.children[1].click();
+      //debugger;
+      // read his stats
 
-// Add the slider element
-var slider = document.createElement('div');
-slider.id = "slider";
-slider.style.height='100%';
+      var stats = {};
+      var categoriesNode = document.querySelector('.ys-playerdetails-table').querySelector('thead').querySelector('tr').children;
+      var statsNode = document.querySelector('.ys-playerdetails-table').querySelector('tbody').querySelector('tr').children;
 
-var url = chrome.extension.getURL("popup.html");
-console.log(typeof url);
-console.log(url);
-slider.innerHTML = '<object type="text/html" data="' + url + '" height="100%"></object>';
-document.body.appendChild(slider);
+      var categoriesList = Array.prototype.slice.call(categoriesNode);
+      var statsList = Array.prototype.slice.call(statsNode);
+
+      // start from second index - first index is description
+      for (var i = 1; i < categoriesList.length; i++) {
+        stats[categoriesList[i].innerText] = statsList[i].innerText;
+      }
+
+      //console.log(playerNode.children[1].innerText);
+      //console.log(stats);
+
+      var fantasyPlayer = playerNode.children[2].innerText.trim();        // Need to trim because of leading space before each player's name
+      //console.log('Fantasy player:', fantasyPlayer);
+      var draftedPlayer = playerNode.children[1].innerText;
+      state[fantasyPlayer][draftedPlayer] = stats;
+    }
+  });
+  //console.log(state);
+
+  // Set event listener to scrape the DOM
+  //document.querySelector('.Col2c').addEventListener('DOMNodeInserted', updateState);
+};
+
+// from smack talk
+// Get the player's name
+// Get the teams
+
+window.addEventListener("message", receiveMessage, false);
+function receiveMessage(event) {
+  console.log("=======================message received in content.js!======================");
+  console.log(event.data);
+  if (event.data.command === 'init') {
+    console.log('initializing');
+    initialize();
+  }
+  if (event.data.command === 'sync') {
+    initialize();
+    console.log('sending state');
+    //console.log(JSON.stringify(state));
+    sendUser();
+    sendState();
+  }
+  if (event.data.command === 'players') {
+    getPlayerStats();
+  }
+}
 
 
-angular.module('gDraft', ['pageslide-directive'])
-.controller('gDController', function($scope, $http){});
+// setInterval(function() {
+//   console.log(JSON.stringify(state));
+//   sendState();
+// }, 2000);

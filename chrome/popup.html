@@ -1,28 +1,35 @@
 <html ng-app="gDPopup">
 <head>
+  <link rel="stylesheet" type="text/css" href="bower_components/angular-c3/dist/c3-chart.css">
     <LINK href="styles.css" rel="stylesheet" type="text/css">
 </head>
 <body ng-controller='gDController'>
-  <h1>Giraffe Draft</h1>
-  <div style='height:65%;overflow:scroll;'>
-    Players
-    <ol>
-      <li class='undrafted' ng-repeat='player in undrafted' ng-click=markDrafted()>
-        {{player.NAME}}
-      </li>
-    </ol>
+  <div style='height:15%;width:275px;overflow:scroll;font-size:1em' ng-mouseleave="removePlayerStats()">
+    <table style ='border: 1px solid black;border-collapse: collapse;'>
+      <tr class='undrafted' ng-repeat='player in undrafted' ng-click="markDrafted()" ng-mouseenter="addPlayerStats()">
+        <td style ='border: 1px solid black;border-collapse: collapse;'>{{player.Player}}</td>
+      </tr>
+    </table>
   </div>
   <br>
   <br/>
-  <div style='overflow:scroll;'>
+
+  <!-- <div style='width:275px'>
     Suggestions
     <ol>
       <li class='suggested' ng-repeat='suggested in suggestions'>
-        {{suggested.NAME}}
+        {{suggested.Player}}
       </li>
     </ol>
-  </div>
+  </div> -->
+  <c3-chart id="chart" config="config"></c3-chart>
+  <br>
+  <ol>
+    <li ng-repeat="(name, age) in state">{{name}}: {{age}}</li>
+  </ol>
+
   <script src="angular.js"></script>
+  <script src="bower_components/angular-c3/dist/c3-chart.js" charset='utf-8'></script>
   <script src="services/services.js"></script>
   <script src="slider.js"></script>
 </body>
