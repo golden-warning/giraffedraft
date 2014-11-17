@@ -10,14 +10,41 @@ iframe.style.top = '0px';
 iframe.style.right = '0px';
 iframe.style.zIndex = '10000000000';
 iframe.style.backgroundColor = 'white';
+iframe.style.display = 'none';
 document.body.appendChild(iframe);
 
+// Insert button to toggle showing the iFrame
+var toggler = document.createElement('button');
+toggler.onclick = function() {
+  var display = document.querySelector('#giraffedraft').style.display;
+  if (display === '') document.querySelector('#giraffedraft').style.display = 'none';
+  else document.querySelector('#giraffedraft').style.display = '';
+};
+document.body.appendChild(toggler);
 
 var undrafted = [];
 var suggestions = [];
 var drafted = [];
 var state = {};
 var allStats = {};
+
+// Check if current page is Yahoo Draft page.
+var onDraftPage = function() {
+  return !!(document.querySelector('.ys-draftclient'));
+};
+
+// Check if current page is the main drafting interface.
+var onDraftMainPage = function() {
+  return !!(document.querySelector('#draft-controls'));
+};
+
+var closeIFrame = function() {
+  document.querySelector('#giraffedraft').style.display = 'none';
+};
+
+var openIFrame = function() {
+  document.querySelector('#giraffedraft').style.display = '';
+};
 
 var sendState = function() {
   var w = document.querySelector('#giraffedraft').contentWindow;
@@ -27,7 +54,7 @@ var sendState = function() {
 var sendUser = function() {
   var w = document.querySelector('#giraffedraft').contentWindow;
   // not working, why?
-  var user = document.querySelector('.ys-order-user').querySelector('.Ell').innerText
+  var user = document.querySelector('.ys-order-user').querySelector('.Ell').innerText;
   //cvar user = 'Walter';
   console.log("sending user:", user);
   w.postMessage({user: user}, '*');
@@ -83,7 +110,7 @@ var getPlayerStats = function() {
 
   // click 'show drafted'
   // should check if already clicked.
-  document.querySelector('#show-drafted').click();
+  document.querySelector('#show-drafted').checked = true;
 
 
   // get players list
@@ -171,6 +198,12 @@ var initialize = function() {
 // from smack talk
 // Get the player's name
 // Get the teams
+function sync() {
+  initialize();
+  console.log('sending state');
+  sendUser();
+  sendState();
+}
 
 window.addEventListener("message", receiveMessage, false);
 function receiveMessage(event) {
@@ -181,11 +214,7 @@ function receiveMessage(event) {
     initialize();
   }
   if (event.data.command === 'sync') {
-    initialize();
-    console.log('sending state');
-    //console.log(JSON.stringify(state));
-    sendUser();
-    sendState();
+    sync();
   }
   if (event.data.command === 'players') {
     getPlayerStats();
@@ -201,14 +230,26 @@ function receiveMessage(event) {
 
 
 // Check if draft page loaded. If so, sync.
-// var t = null;
-// setInterval(function() {
-//   console.log('trying');
-//   if (document.querySelector('.Col2c')) {
-//     console.log('found!');
-//     sync();
-//   }
-// }, 2000);
+function checkDraftLoaded() {
+  console.log('trying');
+  if (onDraftMainPage()) {
+    console.log('found!');
+    sync();
+  }
+  else {
+    setTimeout(checkDraftLoaded, 2000);
+  }
+}
+if (onDraftPage()) {
+  openIFrame();
+  console.log('in a draft');
+  setTimeout(function() {
+    checkDraftLoaded();
+  }, 2000);
+}
+else {
+  console.log('not in draft');
+}
 
 // var target = document.querySelector('body');
 
