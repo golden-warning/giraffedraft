@@ -47,8 +47,14 @@ var clickDraftResults = function() {
   document.querySelector('.SubNavTabs').children[0].click();
 };
 
+var clickDraftGrid = function() {
+  // Select the draft results tab
+  document.querySelector('.NavTabs').childNodes[5].click();
+  document.querySelector('.SubNavTabs').children[0].click();
+};
+
 var getPlayers = function() {
-  clickDraftResults();
+  clickDraftGrid();
 
   var players = document.getElementsByClassName('Fz-xs Ell');
   //console.log(players);
@@ -188,3 +194,35 @@ function receiveMessage(event) {
 //   console.log(JSON.stringify(state));
 //   sendState();
 // }, 2000);
+
+
+
+// Check if draft page loaded. If so, sync.
+// var t = null;
+// setInterval(function() {
+//   console.log('trying');
+//   if (document.querySelector('.Col2c')) {
+//     console.log('found!');
+//     sync();
+//   }
+// }, 2000);
+
+// var target = document.querySelector('body');
+
+// var observer = new MutationObserver(function (mutations) {
+//     // Whether you iterate over mutations..
+//     mutations.forEach(function (mutation) {
+//       // or use all mutation records is entirely up to you
+//       var entry = {
+//         mutation: mutation,
+//         el: mutation.target,
+//         value: mutation.target.textContent,
+//         oldValue: mutation.oldValue
+//       };
+//       console.log('Recording mutation:', entry);
+//     });
+//   });
+//
+// var config = { attributes: true, childList: true, characterData: true };
+//
+// observer.observe(target, config);
