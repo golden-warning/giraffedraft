@@ -27,8 +27,8 @@ var sendState = function() {
 var sendUser = function() {
   var w = document.querySelector('#giraffedraft').contentWindow;
   // not working, why?
-  //var user = document.querySelector('#fixed-pick').querySelector('.Ell').innerText;
-  var user = 'Walter';
+  var user = document.querySelector('.ys-order-user').querySelector('.Ell').innerText
+  //cvar user = 'Walter';
   console.log("sending user:", user);
   w.postMessage({user: user}, '*');
 };
@@ -41,9 +41,20 @@ var click = function(){
 //   document.querySelector('#fixed-pick').querySelector('.Ell').innerText;
 // };
 
-var getPlayers = function() {
+var clickDraftResults = function() {
+  // Select the draft results tab
+  document.querySelector('.NavTabs').childNodes[5].click();
+  document.querySelector('.SubNavTabs').children[0].click();
+};
+
+var clickDraftGrid = function() {
+  // Select the draft results tab
   document.querySelector('.NavTabs').childNodes[5].click();
   document.querySelector('.SubNavTabs').children[1].click();
+};
+
+var getPlayers = function() {
+  clickDraftGrid();
 
   var players = document.getElementsByClassName('Fz-xs Ell');
   //console.log(players);
@@ -52,14 +63,9 @@ var getPlayers = function() {
   });
 };
 
-var selectDraftResults = function() {
-  // Select the draft results tab
-  document.querySelector('.NavTabs').childNodes[5].click();
-  document.querySelector('.SubNavTabs').children[0].click();
-};
 
 var updateState = function() {
-  // selectDraftResults();
+  // clickDraftResults();
   // // Drafted player
   // var draftedPlayer = document.querySelector('#results-by-round').querySelector('tbody').children[1].children[1].innerText;
   // // Fantasy sports player
@@ -121,8 +127,11 @@ var initialize = function() {
   getPlayers();
   //console.log(state);
 
-  selectDraftResults();
+  clickDraftResults();
 
+  // can use
+  // document.querySelector('#results-by-round').querySelector('tbody').getElementsByClassName('Fz-s')
+  // instead?
   var draft = document.querySelector('#results-by-round').querySelector('tbody').children;
   Array.prototype.slice.call(draft).forEach(function(playerNode) {
     if (playerNode.className !== 'drkTheme') {
@@ -188,3 +197,35 @@ function receiveMessage(event) {
 //   console.log(JSON.stringify(state));
 //   sendState();
 // }, 2000);
+
+
+
+// Check if draft page loaded. If so, sync.
+// var t = null;
+// setInterval(function() {
+//   console.log('trying');
+//   if (document.querySelector('.Col2c')) {
+//     console.log('found!');
+//     sync();
+//   }
+// }, 2000);
+
+// var target = document.querySelector('body');
+
+// var observer = new MutationObserver(function (mutations) {
+//     // Whether you iterate over mutations..
+//     mutations.forEach(function (mutation) {
+//       // or use all mutation records is entirely up to you
+//       var entry = {
+//         mutation: mutation,
+//         el: mutation.target,
+//         value: mutation.target.textContent,
+//         oldValue: mutation.oldValue
+//       };
+//       console.log('Recording mutation:', entry);
+//     });
+//   });
+//
+// var config = { attributes: true, childList: true, characterData: true };
+//
+// observer.observe(target, config);
