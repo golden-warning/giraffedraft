@@ -50,7 +50,7 @@ var clickDraftResults = function() {
 var clickDraftGrid = function() {
   // Select the draft results tab
   document.querySelector('.NavTabs').childNodes[5].click();
-  document.querySelector('.SubNavTabs').children[0].click();
+  document.querySelector('.SubNavTabs').children[1].click();
 };
 
 var getPlayers = function() {
@@ -129,6 +129,9 @@ var initialize = function() {
 
   clickDraftResults();
 
+  // can use
+  // document.querySelector('#results-by-round').querySelector('tbody').getElementsByClassName('Fz-s')
+  // instead?
   var draft = document.querySelector('#results-by-round').querySelector('tbody').children;
   Array.prototype.slice.call(draft).forEach(function(playerNode) {
     if (playerNode.className !== 'drkTheme') {
