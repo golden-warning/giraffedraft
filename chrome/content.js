@@ -1,26 +1,40 @@
+// insert arrive into page html
+var arrive = document.createElement('script');
+arrive.src = chrome.extension.getURL('lib/arrive-2.0.0.min.js');
+(document.head||document.documentElement).appendChild(arrive);
+
 // Insert iFrame referencing popup.html
-var iframe = document.createElement('iframe');
-iframe.src = chrome.extension.getURL("popup.html");
-iframe.id = 'giraffedraft';
-iframe.align = 'right';
-iframe.width = '300';
-iframe.height = '100%';
-iframe.style.position = "fixed";
-iframe.style.top = '0px';
-iframe.style.right = '0px';
-iframe.style.zIndex = '10000000000';
-iframe.style.backgroundColor = 'white';
-iframe.style.display = 'none';
-document.body.appendChild(iframe);
+function insertSidebar(src, isInternalUrl) {
+  var iframe = document.createElement('iframe');
+
+  if (isInternalUrl) iframe.src = chrome.extension.getURL(src);
+  else iframe.src = src;
+
+  iframe.id = 'giraffedraft';
+  iframe.align = 'right';
+  iframe.width = '300';
+  iframe.height = '100%';
+  iframe.style.position = "fixed";
+  iframe.style.top = '0px';
+  iframe.style.right = '0px';
+  iframe.style.zIndex = '10000000000';
+  iframe.style.backgroundColor = 'white';
+  //iframe.style.display = 'none';
+  document.body.appendChild(iframe);
+}
 
 // Insert button to toggle showing the iFrame
-var toggler = document.createElement('button');
-toggler.onclick = function() {
-  var display = document.querySelector('#giraffedraft').style.display;
-  if (display === '') document.querySelector('#giraffedraft').style.display = 'none';
-  else document.querySelector('#giraffedraft').style.display = '';
-};
-document.body.appendChild(toggler);
+function insertSidebarButton() {
+  var toggler = document.createElement('button');
+  toggler.onclick = function() {
+    var display = document.querySelector('#giraffedraft').style.display;
+    if (display === '') document.querySelector('#giraffedraft').style.display = 'none';
+    else document.querySelector('#giraffedraft').style.display = '';
+  };
+  document.body.appendChild(toggler);
+}
+
+
 
 var undrafted = [];
 var suggestions = [];
@@ -48,6 +62,7 @@ var openIFrame = function() {
 
 var sendState = function() {
   var w = document.querySelector('#giraffedraft').contentWindow;
+  console.log(JSON.stringify(state));
   w.postMessage({state: state}, '*');
 };
 
@@ -68,6 +83,10 @@ var click = function(){
 //   document.querySelector('#fixed-pick').querySelector('.Ell').innerText;
 // };
 
+var clickPlayers = function() {
+  document.querySelector('.NavTabs').childNodes[1].click();
+};
+
 var clickDraftResults = function() {
   // Select the draft results tab
   document.querySelector('.NavTabs').childNodes[5].click();
@@ -80,14 +99,44 @@ var clickDraftGrid = function() {
   document.querySelector('.SubNavTabs').children[1].click();
 };
 
-var getPlayers = function() {
+var getPlayers = function(cb) {
   clickDraftGrid();
+  // problem is here somewhere================================================
+  function scrapePlayers() {
+    var players = document.getElementsByClassName('Fz-xs Ell');
+    //console.log(players);
+    Array.prototype.slice.call(players).forEach(function(player) {
+      state[player.innerHTML] = {};
+    });
+  }
 
-  var players = document.getElementsByClassName('Fz-xs Ell');
-  //console.log(players);
-  Array.prototype.slice.call(players).forEach(function(player) {
-    state[player.innerHTML] = {};
-  });
+  function wait() {
+    //debugger;
+    if (document.getElementsByClassName('Fz-xs Ell').length > 0) {
+      scrapePlayers();
+      cb();
+    }
+    else {
+      setTimeout(wait, 1000);
+    }
+  }
+
+  wait();
+
+
+  // should watch for creation of .Fz-xs.Ell nodes - problem is it's called
+  // for each node, not one time.
+  // modify arrive.js to handle single instance?
+
+  // document.querySelector('.Col2c').arrive('.Fz-xs.Ell', function() {
+  //   var players = document.getElementsByClassName('Fz-xs Ell');
+  //   //console.log(players);
+  //   Array.prototype.slice.call(players).forEach(function(player) {
+  //     state[player.innerHTML] = {};
+  //   });
+  //   document.unbindArrive(".Fz-xs.Ell");
+  //   cb();
+  // });
 };
 
 
@@ -106,7 +155,7 @@ var updateState = function() {
 
 var getPlayerStats = function() {
   // select player tab
-  document.querySelector('.NavTabs').childNodes[1].click();
+  clickPlayers();
 
   // click 'show drafted'
   // should check if already clicked.
@@ -149,17 +198,15 @@ var getPlayerStats = function() {
 
 };
 
-var initialize = function() {
-  // Populates fantasy players into state
-  getPlayers();
-  //console.log(state);
 
+var scrapeDraftState = function() {
   clickDraftResults();
 
   // can use
   // document.querySelector('#results-by-round').querySelector('tbody').getElementsByClassName('Fz-s')
   // instead?
-  var draft = document.querySelector('#results-by-round').querySelector('tbody').children;
+  var draft = document.querySelector('#results-by-round').querySelector('tbody').getElementsByClassName('Fz-s');
+
   Array.prototype.slice.call(draft).forEach(function(playerNode) {
     if (playerNode.className !== 'drkTheme') {
       // grab stats:
@@ -189,20 +236,31 @@ var initialize = function() {
       state[fantasyPlayer][draftedPlayer] = stats;
     }
   });
-  //console.log(state);
+};
 
-  // Set event listener to scrape the DOM
-  //document.querySelector('.Col2c').addEventListener('DOMNodeInserted', updateState);
+var initialize = function(cb) {
+  // Populates fantasy players into state
+  //debugger;
+  getPlayers(function() {
+    console.log(state);
+    setTimeout(function() {
+      scrapeDraftState();
+      cb();
+    }, 2000);
+  });
+
 };
 
 // from smack talk
 // Get the player's name
 // Get the teams
 function sync() {
-  initialize();
+  initialize(function() {
+    sendUser();
+    sendState();
+    clickPlayers();
+  });
   console.log('sending state');
-  sendUser();
-  sendState();
 }
 
 window.addEventListener("message", receiveMessage, false);
@@ -211,7 +269,7 @@ function receiveMessage(event) {
   console.log(event.data);
   if (event.data.command === 'init') {
     console.log('initializing');
-    initialize();
+    initialize(function() {});
   }
   if (event.data.command === 'sync') {
     sync();
@@ -230,26 +288,19 @@ function receiveMessage(event) {
 
 
 // Check if draft page loaded. If so, sync.
-function checkDraftLoaded() {
-  console.log('trying');
-  if (onDraftMainPage()) {
-    console.log('found!');
-    sync();
-  }
-  else {
-    setTimeout(checkDraftLoaded, 2000);
-  }
-}
 if (onDraftPage()) {
-  openIFrame();
+  // watch for main draft page
+  insertSidebar("popup.html", true);
   console.log('in a draft');
-  setTimeout(function() {
-    checkDraftLoaded();
-  }, 2000);
+  openIFrame();
+  actionOnLoad(sync, '.NavTabs');
 }
 else {
+  insertSidebar('http://giraffedraft.azurewebsites.net');
   console.log('not in draft');
 }
+
+insertSidebarButton();
 
 // var target = document.querySelector('body');
 
@@ -270,3 +321,44 @@ else {
 // var config = { attributes: true, childList: true, characterData: true };
 //
 // observer.observe(target, config);
+
+
+// Setup sync on draft pick. Should only update new draft picks, not do
+// full sync.
+actionOnLoad(function() {
+  actionOnChange(function() {
+    sync();
+    console.log('booga');
+  },'#ys-order-list-container');
+}, '#ys-order-list-container');
+
+
+function actionOnChange(action, selector, parent) {
+  var target = document.querySelector(selector);
+  var observer = new MutationObserver(function(mutations) {
+    console.log(mutations);
+    action();
+  });
+  var config = { attributes: true, childList: true, characterData: true, subtree: true };
+  observer.observe(target, config);
+  console.log(observer);
+  return observer;
+}
+
+
+function actionOnLoad(action, selector, parent) {
+  if (parent) {
+    document.querySelector(parent).arrive(selector, function() {
+      console.log(this);
+      action();
+      //document.unbindArrive(selector);
+    });
+  }
+  else {
+    document.arrive(selector, function() {
+      console.log(this);
+      action();
+      //document.unbindArrive(selector);
+    });
+  }
+}
