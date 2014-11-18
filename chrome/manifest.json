@@ -14,12 +14,13 @@
       {
         "matches": ["http://*.yahoo.com/*"],
         //"matches": ["<all_urls>"],
-        "js": ["angular.js", "content.js"]
+        "js": ["lib/angular.js", "lib/arrive-2.0.0.min.js", "content.js"]
       }
     ],
     "web_accessible_resources": ["app.html", "popup.html",
       "bower_components/angular-c3/dist/c3-chart.js",
-      "angular.js",
+      "lib/arrive-2.0.0.min.js",
+      "lib/angular.js",
       "services/services.js",
       "slider.js",
       "bower_components/angular-c3/dist/c3-chart.css",
