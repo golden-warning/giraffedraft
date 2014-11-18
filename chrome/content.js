@@ -141,16 +141,18 @@ var getPlayers = function(cb) {
 
 
 var updateState = function() {
-  // clickDraftResults();
-  // // Drafted player
-  // var draftedPlayer = document.querySelector('#results-by-round').querySelector('tbody').children[1].children[1].innerText;
-  // // Fantasy sports player
-  // var fantasyPlayer = document.querySelector('#results-by-round').querySelector('tbody').children[1].children[2].innerText.trim();
-  //
-  // state[fantasyPlayer].push(draftedPlayer);
-  //
-  // //console.log(state);
-  // sendState();
+  clickDraftResults();
+  // Drafted player
+  var draftedPlayer = document.querySelector('#results-by-round').querySelector('tbody').children[1].children[1].innerText;
+  // Fantasy sports player
+  var fantasyPlayer = document.querySelector('#results-by-round').querySelector('tbody').children[1].children[2].innerText.trim();
+
+  console.log('===============updated state=============');
+  console.log(fantasyPlayer + ' drafted: ' + draftedPlayer);
+  
+  state[fantasyPlayer].push(draftedPlayer);
+
+  sendState();
 };
 
 var getPlayerStats = function() {
@@ -327,7 +329,7 @@ insertSidebarButton();
 // full sync.
 actionOnLoad(function() {
   actionOnChange(function() {
-    sync();
+    updateState();
     console.log('booga');
   },'#ys-order-list-container');
 }, '#ys-order-list-container');
