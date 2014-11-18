@@ -149,7 +149,7 @@ var updateState = function() {
 
   console.log('===============updated state=============');
   console.log(fantasyPlayer + ' drafted: ' + draftedPlayer);
-  
+
   state[fantasyPlayer].push(draftedPlayer);
 
   sendState();
@@ -165,8 +165,8 @@ var getPlayerStats = function() {
 
 
   // get players list
-  var players = document.querySelector('.player-listing-table').querySelector('tbody').children;
-
+  //var players = document.querySelector('.player-listing-table').querySelector('tbody').children;
+  var players = document.querySelector('.Col2c').querySelectorAll('.ys-player');
   // get stat categories
   var statCategoriesNode = document.querySelector('.player-listing-table').querySelector('thead').children[0].children;
 
@@ -182,10 +182,15 @@ var getPlayerStats = function() {
   // fill out allStats table
   Array.prototype.slice.call(players).forEach(function(player) {
     //console.log(player);
-
+    var stats = {INJ: false};
     // get player name
-    var playerName = player.children[1].innerText.slice(3);
-    var stats = {};
+    var playerName = player.children[1].innerText;
+    // check if player injured
+    if (playerName.indexOf('Injured') >= 0) {
+      stats.INJ = true;
+    }
+    //remove 'Injured' text and any unicode, trim
+    playerName = playerName.replace('Injured', '').replace(/[\uE000-\uF8FF]/g, '').trim();
     // first index is ID
     // second index is player name
     // last index is extra td
@@ -197,6 +202,7 @@ var getPlayerStats = function() {
 
   console.log(allStats);
   console.log(allStats.length);
+  localStorage.setItem('allStats', allStats);
 
 };
 
