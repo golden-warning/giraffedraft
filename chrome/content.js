@@ -294,10 +294,6 @@ if (onDraftPage()) {
   console.log('in a draft');
   openIFrame();
   actionOnLoad(sync, '.NavTabs');
-  // document.arrive('.NavTabs', function() {
-  //   initialize();
-  //   document.unbindArrive('.NavTabs');
-  // });
 }
 else {
   insertSidebar('http://giraffedraft.azurewebsites.net');
@@ -325,6 +321,29 @@ insertSidebarButton();
 // var config = { attributes: true, childList: true, characterData: true };
 //
 // observer.observe(target, config);
+
+
+// Setup sync on draft pick. Should only update new draft picks, not do
+// full sync.
+actionOnLoad(function() {
+  actionOnChange(function() {
+    sync();
+    console.log('booga');
+  },'#ys-order-list-container');
+}, '#ys-order-list-container');
+
+
+function actionOnChange(action, selector, parent) {
+  var target = document.querySelector(selector);
+  var observer = new MutationObserver(function(mutations) {
+    console.log(mutations);
+    action();
+  });
+  var config = { attributes: true, childList: true, characterData: true, subtree: true };
+  observer.observe(target, config);
+  console.log(observer);
+  return observer;
+}
 
 
 function actionOnLoad(action, selector, parent) {
