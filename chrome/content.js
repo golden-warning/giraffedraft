@@ -62,7 +62,7 @@ var openIFrame = function() {
 
 var sendState = function() {
   var w = document.querySelector('#giraffedraft').contentWindow;
-  console.log(JSON.stringify(state));
+  //console.log(JSON.stringify(state));
   w.postMessage({state: state}, '*');
 };
 
@@ -109,34 +109,8 @@ var getPlayers = function(cb) {
       state[player.innerHTML] = {};
     });
   }
-
-  function wait() {
-    //debugger;
-    if (document.getElementsByClassName('Fz-xs Ell').length > 0) {
-      scrapePlayers();
-      cb();
-    }
-    else {
-      setTimeout(wait, 1000);
-    }
-  }
-
-  wait();
-
-
-  // should watch for creation of .Fz-xs.Ell nodes - problem is it's called
-  // for each node, not one time.
-  // modify arrive.js to handle single instance?
-
-  // document.querySelector('.Col2c').arrive('.Fz-xs.Ell', function() {
-  //   var players = document.getElementsByClassName('Fz-xs Ell');
-  //   //console.log(players);
-  //   Array.prototype.slice.call(players).forEach(function(player) {
-  //     state[player.innerHTML] = {};
-  //   });
-  //   document.unbindArrive(".Fz-xs.Ell");
-  //   cb();
-  // });
+  scrapePlayers();
+  cb();
 };
 
 
@@ -147,15 +121,16 @@ var updateState = function() {
   // Fantasy sports player
   var fantasyPlayer = document.querySelector('#results-by-round').querySelector('tbody').children[1].children[2].innerText.trim();
 
+  console.log(state);
   console.log('===============updated state=============');
   console.log(fantasyPlayer + ' drafted: ' + draftedPlayer);
 
-  state[fantasyPlayer].push(draftedPlayer);
+  state[fantasyPlayer][draftedPlayer] = allStats[draftedPlayer];
 
   sendState();
 };
 
-var getPlayerStats = function() {
+var getPlayerStats = function(cb) {
   // select player tab
   clickPlayers();
 
@@ -200,69 +175,52 @@ var getPlayerStats = function() {
     allStats[playerName] = stats;
   });
 
+  // Optional: save stats to chrome.storage,
+  // re-save when out of date?
   console.log(allStats);
-  console.log(allStats.length);
-  chrome.storage.local.set({allStats: allStats},
-    function() {chrome.storage.local.get('allStats',
-      function(data) {
-        console.log(data);
-      });
-    });
-  chrome.storage.local.set({allStatsTimestamp: Date.now()}, function() {});
-
+  // console.log(allStats.length);
+  // chrome.storage.local.set({allStats: allStats},
+  //   function() {chrome.storage.local.get('allStats',
+  //     function(data) {
+  //       console.log(data);
+  //     });
+  //   });
+  // chrome.storage.local.set({allStatsTimestamp: Date.now()}, function() {});
+  cb();
 };
 
 
-var scrapeDraftState = function() {
+var scrapeDraftState = function(cb) {
   clickDraftResults();
 
-  // can use
-  // document.querySelector('#results-by-round').querySelector('tbody').getElementsByClassName('Fz-s')
-  // instead?
   var draft = document.querySelector('#results-by-round').querySelector('tbody').getElementsByClassName('Fz-s');
 
   Array.prototype.slice.call(draft).forEach(function(playerNode) {
-    if (playerNode.className !== 'drkTheme') {
-      // grab stats:
-      // click on player
-      playerNode.children[1].click();
-      //debugger;
-      // read his stats
+    //console.log(playerNode.children[1].innerText);
+    //console.log(stats);
 
-      var stats = {};
-      var categoriesNode = document.querySelector('.ys-playerdetails-table').querySelector('thead').querySelector('tr').children;
-      var statsNode = document.querySelector('.ys-playerdetails-table').querySelector('tbody').querySelector('tr').children;
+    var fantasyPlayer = playerNode.children[2].innerText.trim();        // Need to trim because of leading space before each player's name
+    //console.log('Fantasy player:', fantasyPlayer);
+    var draftedPlayer = playerNode.children[1].innerText;
 
-      var categoriesList = Array.prototype.slice.call(categoriesNode);
-      var statsList = Array.prototype.slice.call(statsNode);
+    var stats = allStats[draftedPlayer];
 
-      // start from second index - first index is description
-      for (var i = 1; i < categoriesList.length; i++) {
-        stats[categoriesList[i].innerText] = statsList[i].innerText;
-      }
-
-      //console.log(playerNode.children[1].innerText);
-      //console.log(stats);
-
-      var fantasyPlayer = playerNode.children[2].innerText.trim();        // Need to trim because of leading space before each player's name
-      //console.log('Fantasy player:', fantasyPlayer);
-      var draftedPlayer = playerNode.children[1].innerText;
-      state[fantasyPlayer][draftedPlayer] = stats;
-    }
+    state[fantasyPlayer][draftedPlayer] = stats;
   });
 };
 
 var initialize = function(cb) {
   // Populates fantasy players into state
   //debugger;
-  getPlayers(function() {
-    console.log(state);
-    setTimeout(function() {
-      scrapeDraftState();
-      cb();
-    }, 2000);
+  getPlayerStats(function() {
+    getPlayers(function() {
+      console.log(state);
+      setTimeout(function() {
+        scrapeDraftState();
+        cb();
+      }, 2000);
+    });
   });
-
 };
 
 // from smack talk
@@ -273,6 +231,8 @@ function sync() {
     sendUser();
     sendState();
     clickPlayers();
+    console.log('here');
+    watchDraftAndUpdateState();
   });
   console.log('sending state');
 }
@@ -292,14 +252,6 @@ function receiveMessage(event) {
     getPlayerStats();
   }
 }
-
-
-// setInterval(function() {
-//   console.log(JSON.stringify(state));
-//   sendState();
-// }, 2000);
-
-
 
 // Check if draft page loaded. If so, sync.
 if (onDraftPage()) {
@@ -339,12 +291,24 @@ insertSidebarButton();
 
 // Setup sync on draft pick. Should only update new draft picks, not do
 // full sync.
+
+// This can't be in a function for some reason. If in a function, the
+// event listener doesn't register???
 actionOnLoad(function() {
   actionOnChange(function() {
     updateState();
     console.log('booga');
   },'#ys-order-list-container');
 }, '#ys-order-list-container');
+
+function watchDraftAndUpdateState() {
+  actionOnLoad(function() {
+    actionOnChange(function() {
+      updateState();
+      console.log('booga');
+    },'#ys-order-list-container');
+  }, '#ys-order-list-container');
+}
 
 
 function actionOnChange(action, selector, parent) {
