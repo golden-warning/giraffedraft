@@ -202,7 +202,13 @@ var getPlayerStats = function() {
 
   console.log(allStats);
   console.log(allStats.length);
-  localStorage.setItem('allStats', allStats);
+  chrome.storage.local.set({allStats: allStats},
+    function() {chrome.storage.local.get('allStats',
+      function(data) {
+        console.log(data);
+      });
+    });
+  chrome.storage.local.set({allStatsTimestamp: Date.now()}, function() {});
 
 };
 

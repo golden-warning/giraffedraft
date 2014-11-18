@@ -12,8 +12,8 @@
     },
     "content_scripts": [
       {
-        "matches": ["http://*.yahoo.com/*"],
-        //"matches": ["<all_urls>"],
+        //"matches": ["http://*.yahoo.com/*"],
+        "matches": ["<all_urls>"],
         "js": ["lib/angular.js", "lib/arrive-2.0.0.min.js", "content.js"]
       }
     ],
@@ -25,5 +25,8 @@
       "slider.js",
       "bower_components/angular-c3/dist/c3-chart.css",
       "styles.css"
+    ],
+    "permissions": [
+      "storage"
     ]
 }
