@@ -80,23 +80,19 @@ var sendState = function() {
 
 var sendUser = function() {
   var w = document.querySelector('#giraffedraft').contentWindow;
-  // not working, why?
+
   var user = document.querySelector('.ys-order-user').querySelector('.Ell').innerText;
-  //cvar user = 'Walter';
+
   console.log("sending user:", user);
   w.postMessage({user: user}, '*');
 };
 
-var click = function(){
-  document.querySelector('.NavTabs').childNodes[5].click();
-};
-
-// var getUserName = function() {
-//   document.querySelector('#fixed-pick').querySelector('.Ell').innerText;
-// };
-
 var clickPlayers = function() {
   document.querySelector('.NavTabs').childNodes[1].click();
+};
+
+var clickTeams = function() {
+  document.querySelector('.NavTabs').children[1].click();
 };
 
 var clickDraftResults = function() {
@@ -112,13 +108,13 @@ var clickDraftGrid = function() {
 };
 
 var getPlayers = function(cb) {
-  clickDraftGrid();
+  clickTeams();
   // problem is here somewhere================================================
   function scrapePlayers() {
-    var players = document.getElementsByClassName('Fz-xs Ell');
-    //console.log(players);
+    var players = document.querySelector('.ys-team-change');
+    console.log(players);
     Array.prototype.slice.call(players).forEach(function(player) {
-      state[player.innerHTML] = {};
+      state[player.innerText] = {};
     });
   }
   scrapePlayers();
@@ -303,20 +299,18 @@ insertSidebarButton();
 
 // This can't be in a function for some reason. If in a function, the
 // event listener doesn't register???
-actionOnLoad(function() {
+// actionOnLoad(function() {
+//   actionOnChange(function() {
+//     updateState();
+//     console.log('booga');
+//   },'#ys-order-list-container');
+// }, '#ys-order-list-container');
+
+function watchDraftAndUpdateState() {
   actionOnChange(function() {
     updateState();
     console.log('booga');
   },'#ys-order-list-container');
-}, '#ys-order-list-container');
-
-function watchDraftAndUpdateState() {
-  actionOnLoad(function() {
-    actionOnChange(function() {
-      updateState();
-      console.log('booga');
-    },'#ys-order-list-container');
-  }, '#ys-order-list-container');
 }
 
 
