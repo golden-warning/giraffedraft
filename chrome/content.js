@@ -27,30 +27,20 @@ function insertSidebar(src, isInternalUrl) {
 function insertSidebarButton() {
   var toggler = document.createElement('button');
   toggler.id = 'giraffedraft-toggle';
+  toggler.className = 'giraffedraft-toggle-open';
 
-  toggler.class = 'giraffedraft-toggle-open';
-  toggler.style.right = '302px';
-
-  toggler.style.position = "fixed";
-  toggler.style.top = '50px';
-
-  toggler.style.zIndex = '100000000000';
   toggler.innerText = "Shot Caller";
-  toggler.style.fontSize = '20px';
-  toggler.style.transform = 'rotate(-90deg)';
-  toggler.style['transform-origin'] = '100% 100%';
-  toggler.style.margin = '0px';
+  //toggler.style.fontSize = '20px';
+
   toggler.onclick = function() {
     var display = document.querySelector('#giraffedraft').style.display;
     if (display === '') {
       document.querySelector('#giraffedraft').style.display = 'none';
-      toggler.class = 'giraffedraft-toggle-closed';
-      toggler.style.right = '0px';
+      toggler.className = 'giraffedraft-toggle-closed';
     }
     else {
       document.querySelector('#giraffedraft').style.display = '';
-      toggler.class = 'giraffedraft-toggle-open';
-      toggler.style.right = '302px';
+      toggler.className = 'giraffedraft-toggle-open';
     }
   };
   document.body.appendChild(toggler);
