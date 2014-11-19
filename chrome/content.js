@@ -169,22 +169,24 @@ var getPlayerStats = function(cb) {
   // fill out allStats table
   Array.prototype.slice.call(players).forEach(function(player) {
     //console.log(player);
-    var stats = {INJ: false};
+    var stats = {injured: false};
     // get player name
     var playerName = player.children[1].innerText;
     // check if player injured
     if (playerName.indexOf('Injured') >= 0) {
-      stats.INJ = true;
+      stats.injured = true;
     }
     //remove 'Injured' text and any unicode, trim
     playerName = playerName.replace('Injured', '').replace(/[\uE000-\uF8FF]/g, '').trim();
     // first index is ID
+    var playerRanking = player.children[0].innerText;
     // second index is player name
     // last index is extra td
     for (var i = 2; i < player.children.length-1; i++) {
       stats[statCategories[i-2]] = player.children[i].innerText;
     }
-    allStats[playerName] = stats;
+    stats.playerName = playerName;
+    allStats[playerRanking] = stats;
   });
 
   // Optional: save stats to chrome.storage,
