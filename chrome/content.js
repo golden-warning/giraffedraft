@@ -26,6 +26,15 @@ function insertSidebar(src, isInternalUrl) {
 // Insert button to toggle showing the iFrame
 function insertSidebarButton() {
   var toggler = document.createElement('button');
+  toggler.id = 'giraffedraft-toggle';
+  toggler.style.position = "fixed";
+  toggler.style.top = '50px';
+  toggler.style.right = '0px';
+  toggler.style.zIndex = '100000000000';
+  toggler.innerText = "Shot Caller";
+  toggler.style.transform = 'rotate(-90deg)';
+  toggler.style['transform-origin'] = '100% 100%';
+  toggler.style.margin = '0px';
   toggler.onclick = function() {
     var display = document.querySelector('#giraffedraft').style.display;
     if (display === '') document.querySelector('#giraffedraft').style.display = 'none';
@@ -104,7 +113,7 @@ var getPlayers = function(cb) {
   // problem is here somewhere================================================
   function scrapePlayers() {
     var players = document.getElementsByClassName('Fz-xs Ell');
-    //console.log(players);
+    console.log(players);
     Array.prototype.slice.call(players).forEach(function(player) {
       state[player.innerHTML] = {};
     });
@@ -227,6 +236,7 @@ var initialize = function(cb) {
 // Get the player's name
 // Get the teams
 function sync() {
+  console.log('*************** calling sync ******************')
   initialize(function() {
     sendUser();
     sendState();
@@ -234,7 +244,7 @@ function sync() {
     console.log('here');
     watchDraftAndUpdateState();
   });
-  console.log('sending state');
+  console.log('****************** sending state *******************');
 }
 
 window.addEventListener("message", receiveMessage, false);
