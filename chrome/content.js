@@ -116,7 +116,7 @@ var getPlayers = function(cb) {
   // problem is here somewhere================================================
   function scrapePlayers() {
     var players = document.getElementsByClassName('Fz-xs Ell');
-    console.log(players);
+    //console.log(players);
     Array.prototype.slice.call(players).forEach(function(player) {
       state[player.innerHTML] = {};
     });
@@ -128,17 +128,9 @@ var getPlayers = function(cb) {
 
 var updateState = function() {
   clickDraftResults();
-  // Drafted player
-  var draftedPlayer = document.querySelector('#results-by-round').querySelector('tbody').children[1].children[1].innerText;
-  // Fantasy sports player
-  var fantasyPlayer = document.querySelector('#results-by-round').querySelector('tbody').children[1].children[2].innerText.trim();
-
-  console.log(state);
-  console.log('===============updated state=============');
-  console.log(fantasyPlayer + ' drafted: ' + draftedPlayer);
-
-  state[fantasyPlayer][draftedPlayer] = allStats[draftedPlayer];
-
+  var playerNode = document.querySelector('#results-by-round').querySelector('tbody').children[1];
+  scrapePlayerFromRBR(playerNode);
+  clickPlayers();
   sendState();
 };
 
@@ -203,25 +195,26 @@ var getPlayerStats = function(cb) {
   cb();
 };
 
+function scrapePlayerFromRBR(playerNode) {
+  //console.log(playerNode.children[1].innerText);
+  //console.log(stats);
+
+  var fantasyPlayer = playerNode.children[2].innerText.trim();        // Need to trim because of leading space before each player's name
+  //console.log('Fantasy player:', fantasyPlayer);
+  var draftedPlayer = playerNode.children[1].innerText;
+  var draftedPlayerRank = playerNode.children[3].innerText;
+
+  var stats = allStats[draftedPlayerRank];
+
+  state[fantasyPlayer][draftedPlayerRank] = stats;
+}
 
 var scrapeDraftState = function(cb) {
   clickDraftResults();
 
   var draft = document.querySelector('#results-by-round').querySelector('tbody').getElementsByClassName('Fz-s');
 
-  Array.prototype.slice.call(draft).forEach(function(playerNode) {
-    //console.log(playerNode.children[1].innerText);
-    //console.log(stats);
-
-    var fantasyPlayer = playerNode.children[2].innerText.trim();        // Need to trim because of leading space before each player's name
-    //console.log('Fantasy player:', fantasyPlayer);
-    var draftedPlayer = playerNode.children[1].innerText;
-    var draftedPlayerRank = playerNode.children[3].innerText;
-
-    var stats = allStats[draftedPlayerRank];
-
-    state[fantasyPlayer][draftedPlayerRank] = stats;
-  });
+  Array.prototype.slice.call(draft).forEach(scrapePlayerFromRBR);
 };
 
 var initialize = function(cb) {
