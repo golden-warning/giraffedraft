@@ -216,10 +216,11 @@ var scrapeDraftState = function(cb) {
     var fantasyPlayer = playerNode.children[2].innerText.trim();        // Need to trim because of leading space before each player's name
     //console.log('Fantasy player:', fantasyPlayer);
     var draftedPlayer = playerNode.children[1].innerText;
+    var draftedPlayerRank = playerNode.children[3].innerText;
 
-    var stats = allStats[draftedPlayer];
+    var stats = allStats[draftedPlayerRank];
 
-    state[fantasyPlayer][draftedPlayer] = stats;
+    state[fantasyPlayer][draftedPlayerRank] = stats;
   });
 };
 
