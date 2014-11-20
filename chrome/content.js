@@ -19,7 +19,7 @@ function insertSidebar(src, isInternalUrl) {
   iframe.style.right = '0px';
   iframe.style.zIndex = '10000000000';
   iframe.style.backgroundColor = 'white';
-  //iframe.style.display = 'none';
+  iframe.style.display = 'none';
   document.body.appendChild(iframe);
 }
 
@@ -27,7 +27,7 @@ function insertSidebar(src, isInternalUrl) {
 function insertSidebarButton() {
   var toggler = document.createElement('button');
   toggler.id = 'giraffedraft-toggle';
-  toggler.className = 'giraffedraft-toggle-open';
+  toggler.className = 'giraffedraft-toggle-closed';
 
   toggler.innerText = "Shot Caller";
   //toggler.style.fontSize = '20px';
@@ -53,6 +53,7 @@ var suggestions = [];
 var drafted = [];
 var state = {};
 var allStats = {};
+var queue = {};
 
 // Check if current page is Yahoo Draft page.
 var onDraftPage = function() {
@@ -213,6 +214,20 @@ var scrapeDraftState = function(cb) {
   Array.prototype.slice.call(draft).forEach(scrapePlayerFromRBR);
 };
 
+
+// Scrapes queue state. Should be run on load.
+var scrapeQueue = function() {
+  queue = {};
+  var currentQueue = document.querySelector('.ys-queue-table').querySelector('tbody').querySelectorAll('.ys-player');
+  Array.prototype.slice.call(currentQueue).forEach(function(playerNode) {
+    var playerRank = playerNode.children[0].innerText;
+    queue[playerRank] = allStats[playerRank];
+  });
+  console.log('================queue================');
+  console.log(queue);
+};
+
+
 var initialize = function(cb) {
   // Populates fantasy players into state
   //debugger;
@@ -221,6 +236,8 @@ var initialize = function(cb) {
       console.log(state);
       setTimeout(function() {
         scrapeDraftState();
+        //scrapeQueue();
+        actionOnLoad(scrapeQueue, '.ys-queue-table');
         cb();
       }, 2000);
     });
@@ -235,6 +252,7 @@ function sync() {
   initialize(function() {
     sendUser();
     sendState();
+    sendQueue();
     clickPlayers();
     console.log('here');
     watchDraftAndUpdateState();
