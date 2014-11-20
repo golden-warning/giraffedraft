@@ -313,17 +313,32 @@ function watchDraftAndUpdateState() {
   },'#ys-order-list-container');
 }
 
+// sets a mutation observer on an element.
+// if element doesn't exist, waits for it to be loaded with
+// actionOnLoad.
 
+// Need to test when draft is first starting.
+// This works when joining a draft in progress, but NOT
+// when draft first starts
 function actionOnChange(action, selector, parent) {
+  function watch() {
+    var observer = new MutationObserver(function(mutations) {
+      //console.log(mutations);
+      action();
+    });
+    var config = { attributes: true, childList: true, characterData: true, subtree: true };
+    observer.observe(target, config);
+    console.log(observer);
+  }
+
   var target = document.querySelector(selector);
-  var observer = new MutationObserver(function(mutations) {
-    console.log(mutations);
-    action();
-  });
-  var config = { attributes: true, childList: true, characterData: true, subtree: true };
-  observer.observe(target, config);
-  console.log(observer);
-  return observer;
+
+  if (!target) {
+    actionOnLoad(watch, selector, parent);
+  }
+  else {
+    watch();
+  }
 }
 
 
