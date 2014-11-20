@@ -26,10 +26,22 @@ function insertSidebar(src, isInternalUrl) {
 // Insert button to toggle showing the iFrame
 function insertSidebarButton() {
   var toggler = document.createElement('button');
+  toggler.id = 'giraffedraft-toggle';
+  toggler.className = 'giraffedraft-toggle-open';
+
+  toggler.innerText = "Shot Caller";
+  //toggler.style.fontSize = '20px';
+
   toggler.onclick = function() {
     var display = document.querySelector('#giraffedraft').style.display;
-    if (display === '') document.querySelector('#giraffedraft').style.display = 'none';
-    else document.querySelector('#giraffedraft').style.display = '';
+    if (display === '') {
+      document.querySelector('#giraffedraft').style.display = 'none';
+      toggler.className = 'giraffedraft-toggle-closed';
+    }
+    else {
+      document.querySelector('#giraffedraft').style.display = '';
+      toggler.className = 'giraffedraft-toggle-open';
+    }
   };
   document.body.appendChild(toggler);
 }
@@ -62,29 +74,25 @@ var openIFrame = function() {
 
 var sendState = function() {
   var w = document.querySelector('#giraffedraft').contentWindow;
-  console.log(JSON.stringify(state));
+  //console.log(JSON.stringify(state));
   w.postMessage({state: state}, '*');
 };
 
 var sendUser = function() {
   var w = document.querySelector('#giraffedraft').contentWindow;
-  // not working, why?
+
   var user = document.querySelector('.ys-order-user').querySelector('.Ell').innerText;
-  //cvar user = 'Walter';
+
   console.log("sending user:", user);
   w.postMessage({user: user}, '*');
 };
 
-var click = function(){
-  document.querySelector('.NavTabs').childNodes[5].click();
-};
-
-// var getUserName = function() {
-//   document.querySelector('#fixed-pick').querySelector('.Ell').innerText;
-// };
-
 var clickPlayers = function() {
   document.querySelector('.NavTabs').childNodes[1].click();
+};
+
+var clickTeams = function() {
+  document.querySelector('.NavTabs').children[1].click();
 };
 
 var clickDraftResults = function() {
@@ -100,60 +108,29 @@ var clickDraftGrid = function() {
 };
 
 var getPlayers = function(cb) {
-  clickDraftGrid();
+  clickTeams();
   // problem is here somewhere================================================
   function scrapePlayers() {
-    var players = document.getElementsByClassName('Fz-xs Ell');
-    //console.log(players);
+    var players = document.querySelector('.ys-team-change');
+    console.log(players);
     Array.prototype.slice.call(players).forEach(function(player) {
-      state[player.innerHTML] = {};
+      state[player.innerText] = {};
     });
   }
-
-  function wait() {
-    //debugger;
-    if (document.getElementsByClassName('Fz-xs Ell').length > 0) {
-      scrapePlayers();
-      cb();
-    }
-    else {
-      setTimeout(wait, 1000);
-    }
-  }
-
-  wait();
-
-
-  // should watch for creation of .Fz-xs.Ell nodes - problem is it's called
-  // for each node, not one time.
-  // modify arrive.js to handle single instance?
-
-  // document.querySelector('.Col2c').arrive('.Fz-xs.Ell', function() {
-  //   var players = document.getElementsByClassName('Fz-xs Ell');
-  //   //console.log(players);
-  //   Array.prototype.slice.call(players).forEach(function(player) {
-  //     state[player.innerHTML] = {};
-  //   });
-  //   document.unbindArrive(".Fz-xs.Ell");
-  //   cb();
-  // });
+  scrapePlayers();
+  cb();
 };
 
 
 var updateState = function() {
-  // clickDraftResults();
-  // // Drafted player
-  // var draftedPlayer = document.querySelector('#results-by-round').querySelector('tbody').children[1].children[1].innerText;
-  // // Fantasy sports player
-  // var fantasyPlayer = document.querySelector('#results-by-round').querySelector('tbody').children[1].children[2].innerText.trim();
-  //
-  // state[fantasyPlayer].push(draftedPlayer);
-  //
-  // //console.log(state);
-  // sendState();
+  clickDraftResults();
+  var playerNode = document.querySelector('#results-by-round').querySelector('tbody').children[1];
+  scrapePlayerFromRBR(playerNode);
+  clickPlayers();
+  sendState();
 };
 
-var getPlayerStats = function() {
+var getPlayerStats = function(cb) {
   // select player tab
   clickPlayers();
 
@@ -163,8 +140,8 @@ var getPlayerStats = function() {
 
 
   // get players list
-  var players = document.querySelector('.player-listing-table').querySelector('tbody').children;
-
+  //var players = document.querySelector('.player-listing-table').querySelector('tbody').children;
+  var players = document.querySelector('.Col2c').querySelectorAll('.ys-player');
   // get stat categories
   var statCategoriesNode = document.querySelector('.player-listing-table').querySelector('thead').children[0].children;
 
@@ -180,87 +157,89 @@ var getPlayerStats = function() {
   // fill out allStats table
   Array.prototype.slice.call(players).forEach(function(player) {
     //console.log(player);
-
+    var stats = {injured: false};
     // get player name
-    var playerName = player.children[1].innerText.slice(3);
-    var stats = {};
+    var playerName = player.children[1].innerText;
+    // check if player injured
+    if (playerName.indexOf('Injured') >= 0) {
+      stats.injured = true;
+    }
+    //remove 'Injured' text and any unicode, trim
+    playerName = playerName.replace('Injured', '').replace(/[\uE000-\uF8FF]/g, '').trim();
     // first index is ID
+    var playerRanking = player.children[0].innerText;
     // second index is player name
     // last index is extra td
     for (var i = 2; i < player.children.length-1; i++) {
       stats[statCategories[i-2]] = player.children[i].innerText;
     }
-    allStats[playerName] = stats;
+    stats.playerName = playerName;
+    allStats[playerRanking] = stats;
   });
 
+  // Optional: save stats to chrome.storage,
+  // re-save when out of date?
   console.log(allStats);
-  console.log(allStats.length);
-
+  // console.log(allStats.length);
+  // chrome.storage.local.set({allStats: allStats},
+  //   function() {chrome.storage.local.get('allStats',
+  //     function(data) {
+  //       console.log(data);
+  //     });
+  //   });
+  // chrome.storage.local.set({allStatsTimestamp: Date.now()}, function() {});
+  cb();
 };
 
+function scrapePlayerFromRBR(playerNode) {
+  //console.log(playerNode.children[1].innerText);
+  //console.log(stats);
 
-var scrapeDraftState = function() {
+  var fantasyPlayer = playerNode.children[2].innerText.trim();        // Need to trim because of leading space before each player's name
+  //console.log('Fantasy player:', fantasyPlayer);
+  var draftedPlayer = playerNode.children[1].innerText;
+  var draftedPlayerRank = playerNode.children[3].innerText;
+
+  var stats = allStats[draftedPlayerRank];
+
+  state[fantasyPlayer][draftedPlayerRank] = stats;
+}
+
+var scrapeDraftState = function(cb) {
   clickDraftResults();
 
-  // can use
-  // document.querySelector('#results-by-round').querySelector('tbody').getElementsByClassName('Fz-s')
-  // instead?
   var draft = document.querySelector('#results-by-round').querySelector('tbody').getElementsByClassName('Fz-s');
 
-  Array.prototype.slice.call(draft).forEach(function(playerNode) {
-    if (playerNode.className !== 'drkTheme') {
-      // grab stats:
-      // click on player
-      playerNode.children[1].click();
-      //debugger;
-      // read his stats
-
-      var stats = {};
-      var categoriesNode = document.querySelector('.ys-playerdetails-table').querySelector('thead').querySelector('tr').children;
-      var statsNode = document.querySelector('.ys-playerdetails-table').querySelector('tbody').querySelector('tr').children;
-
-      var categoriesList = Array.prototype.slice.call(categoriesNode);
-      var statsList = Array.prototype.slice.call(statsNode);
-
-      // start from second index - first index is description
-      for (var i = 1; i < categoriesList.length; i++) {
-        stats[categoriesList[i].innerText] = statsList[i].innerText;
-      }
-
-      //console.log(playerNode.children[1].innerText);
-      //console.log(stats);
-
-      var fantasyPlayer = playerNode.children[2].innerText.trim();        // Need to trim because of leading space before each player's name
-      //console.log('Fantasy player:', fantasyPlayer);
-      var draftedPlayer = playerNode.children[1].innerText;
-      state[fantasyPlayer][draftedPlayer] = stats;
-    }
-  });
+  Array.prototype.slice.call(draft).forEach(scrapePlayerFromRBR);
 };
 
 var initialize = function(cb) {
   // Populates fantasy players into state
   //debugger;
-  getPlayers(function() {
-    console.log(state);
-    setTimeout(function() {
-      scrapeDraftState();
-      cb();
-    }, 2000);
+  getPlayerStats(function() {
+    getPlayers(function() {
+      console.log(state);
+      setTimeout(function() {
+        scrapeDraftState();
+        cb();
+      }, 2000);
+    });
   });
-
 };
 
 // from smack talk
 // Get the player's name
 // Get the teams
 function sync() {
+  console.log('*************** calling sync ******************')
   initialize(function() {
     sendUser();
     sendState();
     clickPlayers();
+    console.log('here');
+    watchDraftAndUpdateState();
   });
-  console.log('sending state');
+  console.log('****************** sending state *******************');
 }
 
 window.addEventListener("message", receiveMessage, false);
@@ -278,14 +257,6 @@ function receiveMessage(event) {
     getPlayerStats();
   }
 }
-
-
-// setInterval(function() {
-//   console.log(JSON.stringify(state));
-//   sendState();
-// }, 2000);
-
-
 
 // Check if draft page loaded. If so, sync.
 if (onDraftPage()) {
@@ -325,24 +296,49 @@ insertSidebarButton();
 
 // Setup sync on draft pick. Should only update new draft picks, not do
 // full sync.
-actionOnLoad(function() {
+
+// This can't be in a function for some reason. If in a function, the
+// event listener doesn't register???
+// actionOnLoad(function() {
+//   actionOnChange(function() {
+//     updateState();
+//     console.log('booga');
+//   },'#ys-order-list-container');
+// }, '#ys-order-list-container');
+
+function watchDraftAndUpdateState() {
   actionOnChange(function() {
-    sync();
+    updateState();
     console.log('booga');
   },'#ys-order-list-container');
-}, '#ys-order-list-container');
+}
 
+// sets a mutation observer on an element.
+// if element doesn't exist, waits for it to be loaded with
+// actionOnLoad.
 
+// Need to test when draft is first starting.
+// This works when joining a draft in progress, but NOT
+// when draft first starts
 function actionOnChange(action, selector, parent) {
+  function watch() {
+    var observer = new MutationObserver(function(mutations) {
+      //console.log(mutations);
+      action();
+    });
+    var config = { attributes: true, childList: true, characterData: true, subtree: true };
+    observer.observe(target, config);
+    console.log(observer);
+  }
+
   var target = document.querySelector(selector);
-  var observer = new MutationObserver(function(mutations) {
-    console.log(mutations);
-    action();
-  });
-  var config = { attributes: true, childList: true, characterData: true, subtree: true };
-  observer.observe(target, config);
-  console.log(observer);
-  return observer;
+
+  if (!target) {
+    actionOnLoad(watch, selector, parent);
+  }
+  else {
+    watch();
+  }
 }
 
 

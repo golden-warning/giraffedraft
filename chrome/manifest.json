@@ -12,9 +12,10 @@
     },
     "content_scripts": [
       {
-        "matches": ["http://*.yahoo.com/*"],
-        //"matches": ["<all_urls>"],
-        "js": ["lib/angular.js", "lib/arrive-2.0.0.min.js", "content.js"]
+        //"matches": ["http://*.yahoo.com/*"],
+        "matches": ["<all_urls>"],
+        "js": ["lib/angular.js", "lib/arrive-2.0.0.min.js", "content.js"],
+        "css": ["content-style.css"]
       }
     ],
     "web_accessible_resources": ["app.html", "popup.html",
@@ -25,5 +26,8 @@
       "slider.js",
       "bower_components/angular-c3/dist/c3-chart.css",
       "styles.css"
+    ],
+    "permissions": [
+      "storage"
     ]
 }
