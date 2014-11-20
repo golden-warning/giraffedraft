@@ -4,7 +4,7 @@
     <LINK href="styles.css" rel="stylesheet" type="text/css">
 </head>
 <body ng-controller='gDController'>
-  <div style='height:15%;width:275px;overflow:scroll;font-size:1em' ng-mouseleave="removePlayerStats()">
+  <div style='height:15%;width:275px;overflow:scroll;font-size:1em' ng-mouseleave="removeStats()">
     <table style ='border: 1px solid black;border-collapse: collapse;'>
       <tr class='undrafted' ng-repeat='player in undrafted' ng-mouseenter="addPlayerStats()">
         <td style ='border: 1px solid black;border-collapse: collapse;'>{{player.Player}}</td>

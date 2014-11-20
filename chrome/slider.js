@@ -5,7 +5,19 @@ angular.module('gDPopup', ['gDraft.services', 'angular-c3'])
   $scope.suggestions = [];
   $scope.drafted = [];
   $scope.user = '';
-  $scope.state = {};
+  $scope.state = {team1:{FGM:{"TO": 113.58,
+    "BLK": 43.44,
+    "ST": 62.16,
+    "AST": 176.84,
+    "REB": 332.6,
+    "PTS": 1004.8,
+    "3PTM": 54.16,
+    "FT%": 0,
+    "FTA": 269.2,
+    "FTM": 219.8,
+    "FG%": 0,
+    "FGA": 768,
+    "FGM": 365}}};
   $scope.lineupSize = 12;
   $scope.normalizedTeamStats = {};
 
@@ -196,11 +208,17 @@ angular.module('gDPopup', ['gDraft.services', 'angular-c3'])
     });
   }
 
-  $scope.removePlayerStats = function(){
+  $scope.removeStats = function(){
     $scope.playerStats = {};
     c3Factory.get('chart').then(function(chart) {
       chart.unload({
         ids:['playerStats']
+      });
+    });
+    $scope.opponentStats = {};
+    c3Factory.get('chart').then(function(chart) {
+      chart.unload({
+        ids:['opponentStats']
       });
     });
   }
@@ -244,19 +262,19 @@ angular.module('gDPopup', ['gDraft.services', 'angular-c3'])
         columns: [
           [
             'opponentStats',
-            FGM,
-            FGA,
+            FGM* 100 / ($scope.leagueAverages['FGM'] * $scope.lineupSize),
+            FGA* 100 / ($scope.leagueAverages['FGA'] * $scope.lineupSize),
             FG,
-            FTM,
-            FTA,
+            FTM* 100 / ($scope.leagueAverages['FTM'] * $scope.lineupSize),
+            FTA* 100 / ($scope.leagueAverages['FTA'] * $scope.lineupSize),
             FT,
-            ThreePT,
-            PTS,
-            REB,
-            AST,
-            ST,
-            BLK,
-            TO
+            ThreePT * 100 / ($scope.leagueAverages['3PTM'] * $scope.lineupSize),
+            PTS* 100 / ($scope.leagueAverages['PTS'] * $scope.lineupSize),
+            REB* 100 / ($scope.leagueAverages['REB'] * $scope.lineupSize),
+            AST* 100 / ($scope.leagueAverages['AST'] * $scope.lineupSize),
+            ST* 100 / ($scope.leagueAverages['ST'] * $scope.lineupSize),
+            BLK* 100 / ($scope.leagueAverages['BLK'] * $scope.lineupSize),
+            TO* 100 / ($scope.leagueAverages['TO'] * $scope.lineupSize)
           ]
         ],
       });
