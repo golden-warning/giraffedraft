@@ -4,17 +4,30 @@
     <LINK href="styles.css" rel="stylesheet" type="text/css">
 </head>
 <body ng-controller='gDController'>
+
+  <div style='width:275' ng-init="tab = 1">
+    <span ng-class="{active:tab===1}"> 
+      <a href ng-click="tab = 1">Suggestions</a>  
+    </span>
+    <span ng-class="{active:tab===2}"> 
+      <a href ng-click="tab = 2">Queue</a> 
+    </span>
+    <span ng-class="{active:tab===3}"> 
+      <a href ng-click="tab = 3">Teams</a> 
+    </span>
+  </div>   
   <div style='height:15%;width:275px;overflow:scroll;font-size:1em' ng-mouseleave="removeStats()">
-    <table style ='border: 1px solid black;border-collapse: collapse;'>
+    <table ng-show="tab === 1" style ='border: 1px solid black;border-collapse: collapse;'>
       <tr class='undrafted' ng-repeat='player in undrafted' ng-mouseenter="addPlayerStats()">
         <td style ='border: 1px solid black;border-collapse: collapse;'>{{player.Player}}</td>
       </tr>
     </table>
-  </div>
-  <br>
-  <br/>
-  <div style='height:15%;width:275px;overflow:scroll;font-size:1em' ng-mouseleave="removePlayerStats()">
-    <table style ='border: 1px solid black;border-collapse: collapse;'>
+    <table ng-show="tab === 2" style ='border: 1px solid black;border-collapse: collapse;'>
+      <tr class='undrafted' ng-repeat='(team,stats) in state' ng-mouseenter="addOpponentStats()">
+        <td style ='border: 1px solid black;border-collapse: collapseß;'>{{team}}</td>
+      </tr>
+    </table>
+    <table ng-show="tab === 3" style ='border: 1px solid black;border-collapse: collapse;'>
       <tr class='undrafted' ng-repeat='(team,stats) in state' ng-mouseenter="addOpponentStats()">
         <td style ='border: 1px solid black;border-collapse: collapseß;'>{{team}}</td>
       </tr>
