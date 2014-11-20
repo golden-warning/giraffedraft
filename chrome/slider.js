@@ -5,19 +5,12 @@ angular.module('gDPopup', ['gDraft.services', 'angular-c3'])
   $scope.suggestions = [];
   $scope.drafted = [];
   $scope.user = '';
-  $scope.state = {team1:{FGM:{"TO": 113.58,
-    "BLK": 43.44,
-    "ST": 62.16,
-    "AST": 176.84,
-    "REB": 332.6,
-    "PTS": 1004.8,
-    "3PTM": 54.16,
-    "FT%": 0,
-    "FTA": 269.2,
-    "FTM": 219.8,
-    "FG%": 0,
-    "FGA": 768,
-    "FGM": 365}}};
+  $scope.state = {
+    hossein: {"2":{"injured":false,"ADP":"2.6","FGM":"583","FGA":"1102","FG%":".530","FTM":"326","FTA":"411","FT%":".793","3PTM":"2.5","PTS":"1496","REB":"682","AST":"112","ST":"107","BLK":"202","TO":"110","playerName":"Anthony Davis NO - PF,C"}},
+    'Team 12': {
+"12":{"injured":false,"ADP":"14.5","FGM":"608","FGA":"1222","FG%":".498","FTM":"172","FTA":"236","FT%":".728","3PTM":"1.6","PTS":"1389","REB":"675","AST":"136","ST":"59.5","BLK":"87.0","TO":"94.9","playerName":"Al Jefferson Cha - PF,C"},
+"17":{"injured":false,"ADP":"20.9","FGM":"462","FGA":"967","FG%":".478","FTM":"345","FTA":"422","FT%":".819","3PTM":"65.7","PTS":"1336","REB":"556","AST":"137","ST":"65.7","BLK":"61.2","TO":"122","playerName":"Chris Bosh Mia - PF,C"}}
+  };
   $scope.lineupSize = 12;
   $scope.normalizedTeamStats = {};
 
@@ -226,6 +219,8 @@ angular.module('gDPopup', ['gDraft.services', 'angular-c3'])
   $scope.addOpponentStats = function(){
     $scope.opponentStats = this.stats;
 
+    console.log($scope.opponentStats)
+
     var FGM = 0;
     var FGA = 0;
     var FG = 0;
@@ -240,19 +235,23 @@ angular.module('gDPopup', ['gDraft.services', 'angular-c3'])
     var BLK = 0;
     var TO = 0;
 
+
+
     for (key in $scope.opponentStats) {
-      FGM += $scope.opponentStats[key].FGM
-      FGA += $scope.opponentStats[key].FGA
-      FTM += $scope.opponentStats[key].FTM
-      FTA += $scope.opponentStats[key].FTA
-      ThreePT += $scope.opponentStats[key]['3PTM']
-      PTS += $scope.opponentStats[key].PTS
-      REB += $scope.opponentStats[key].REB
-      AST += $scope.opponentStats[key].AST
-      ST += $scope.opponentStats[key].ST 
-      BLK += $scope.opponentStats[key].BLK
-      TO += $scope.opponentStats[key].TO 
+      FGM += parseInt($scope.opponentStats[key].FGM)
+      FGA += parseInt($scope.opponentStats[key].FGA)
+      FTM += parseInt($scope.opponentStats[key].FTM)
+      FTA += parseInt($scope.opponentStats[key].FTA)
+      ThreePT += parseInt($scope.opponentStats[key]['3PTM'])
+      PTS += parseInt($scope.opponentStats[key].PTS)
+      REB += parseInt($scope.opponentStats[key].REB)
+      AST += parseInt($scope.opponentStats[key].AST)
+      ST += parseInt($scope.opponentStats[key].ST)
+      BLK += parseInt($scope.opponentStats[key].BLK)
+      TO += parseInt($scope.opponentStats[key].TO)
     };
+
+    console.log('stats', FGM, FGA, FTM, FTA, ThreePT, PTS, REB, AST, ST, BLK, TO)
 
     FG = FGM*100/FGA;
     FT = FTM*100/FTA;
