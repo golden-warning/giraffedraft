@@ -6,13 +6,20 @@
 <body ng-controller='gDController'>
   <div style='height:15%;width:275px;overflow:scroll;font-size:1em' ng-mouseleave="removePlayerStats()">
     <table style ='border: 1px solid black;border-collapse: collapse;'>
-      <tr class='undrafted' ng-repeat='player in undrafted' ng-click="markDrafted()" ng-mouseenter="addPlayerStats()">
+      <tr class='undrafted' ng-repeat='player in undrafted' ng-mouseenter="addPlayerStats()">
         <td style ='border: 1px solid black;border-collapse: collapse;'>{{player.Player}}</td>
       </tr>
     </table>
   </div>
   <br>
   <br/>
+  <div style='height:15%;width:275px;overflow:scroll;font-size:1em' ng-mouseleave="removePlayerStats()">
+    <table style ='border: 1px solid black;border-collapse: collapse;'>
+      <tr class='undrafted' ng-repeat='(team,stats) in state' ng-mouseenter="addOpponentStats()">
+        <td style ='border: 1px solid black;border-collapse: collapseß;'>{{team}}</td>
+      </tr>
+    </table>
+  </div>
 
   <!-- <div style='width:275px'>
     Suggestions

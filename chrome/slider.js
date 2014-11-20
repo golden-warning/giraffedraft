@@ -58,6 +58,22 @@ angular.module('gDPopup', ['gDraft.services', 'angular-c3'])
     "TO": 0,
   };
 
+  $scope.opponentStats = {
+    "FGM": 0,
+    "FGA": 0,
+    "FG%": 0,
+    "FTM": 0,
+    "FTA": 0,
+    "FT%": 0,
+    "3PTM": 0,
+    "PTS": 0,
+    "REB": 0,
+    "AST": 0,
+    "ST": 0,
+    "BLK": 0,
+    "TO": 0,
+  };
+
   $scope.config = {
     data: {
       columns: [
@@ -147,44 +163,6 @@ angular.module('gDPopup', ['gDraft.services', 'angular-c3'])
   //     })
   // }
 
-  $scope.markDrafted = function(){
-    $scope.drafted.push(this.player)
-    var ind = $scope.undrafted.indexOf(this.player)
-    $scope.undrafted.splice(ind,1);
-    for(key in this.player) {
-      if (key !== "NAME" && key !== "Player") {
-        $scope.teamStats[key] += parseInt(this.player[key]);
-      }
-    }
-
-    console.log($scope.teamStats);
-
-    c3Factory.get('chart').then(function(chart) {
-      chart.load({
-        columns: [
-          [
-            'teamStats',
-            $scope.normalizedTeamStats['FGM'],
-            $scope.normalizedTeamStats['FGA'],
-            $scope.normalizedTeamStats["FG%"],
-            $scope.normalizedTeamStats['FTM'],
-            $scope.normalizedTeamStats['FTA'],
-            $scope.normalizedTeamStats['FT%'],
-            $scope.normalizedTeamStats['3PTM'],
-            $scope.normalizedTeamStats['PTS'],
-            $scope.normalizedTeamStats['REB'],
-            $scope.normalizedTeamStats['AST'],
-            $scope.normalizedTeamStats['ST'],
-            $scope.normalizedTeamStats['BLK'],
-            $scope.normalizedTeamStats['TO'],
-          ],
-        ],
-      });
-    });
-
-    // $scope.calculate();
-  }
-
   $scope.addPlayerStats = function(){
     $scope.playerStats = this.player;
     console.log(this.player);
@@ -223,6 +201,64 @@ angular.module('gDPopup', ['gDraft.services', 'angular-c3'])
     c3Factory.get('chart').then(function(chart) {
       chart.unload({
         ids:['playerStats']
+      });
+    });
+  }
+
+  $scope.addOpponentStats = function(){
+    $scope.opponentStats = this.stats;
+
+    var FGM = 0;
+    var FGA = 0;
+    var FG = 0;
+    var FTM = 0;
+    var FTA = 0;
+    var FT = 0;
+    var ThreePT = 0;
+    var PTS = 0;
+    var REB = 0;
+    var AST = 0;
+    var ST = 0;
+    var BLK = 0;
+    var TO = 0;
+
+    for (key in $scope.opponentStats) {
+      FGM += $scope.opponentStats[key].FGM
+      FGA += $scope.opponentStats[key].FGA
+      FTM += $scope.opponentStats[key].FTM
+      FTA += $scope.opponentStats[key].FTA
+      ThreePT += $scope.opponentStats[key]['3PTM']
+      PTS += $scope.opponentStats[key].PTS
+      REB += $scope.opponentStats[key].REB
+      AST += $scope.opponentStats[key].AST
+      ST += $scope.opponentStats[key].ST 
+      BLK += $scope.opponentStats[key].BLK
+      TO += $scope.opponentStats[key].TO 
+    };
+
+    FG = FGM*100/FGA;
+    FT = FTM*100/FTA;
+
+    c3Factory.get('chart').then(function(chart) {
+      chart.load({
+        columns: [
+          [
+            'opponentStats',
+            FGM,
+            FGA,
+            FG,
+            FTM,
+            FTA,
+            FT,
+            ThreePT,
+            PTS,
+            REB,
+            AST,
+            ST,
+            BLK,
+            TO
+          ]
+        ],
       });
     });
   }
