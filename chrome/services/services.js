@@ -7,11 +7,11 @@
 
       function ($http) {
 
-        function loadPlayers(players){
-	      return $http.get('http://giraffedraft.azurewebsites.net/api/init')
+        function getRequest(link){
+	      return $http.get(link)
 	        .then(function(data, status, headers, config) {
 
-	        return data.data;
+	        return data;
 
 	      });
 
@@ -26,7 +26,7 @@
         }
 
       return {
-        loadPlayers: loadPlayers,
+        getRequest: getRequest,
         getSuggestions: getSuggestions
       };
     });
