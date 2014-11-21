@@ -18,7 +18,7 @@
         }
 
         function getSuggestions(undrafted){
-          return $http.post('http://giraffedraft.azurewebsites.net/api/suggest', undrafted)
+          return $http.post('http://shotcaller-api.cloudapp.net/test/suggest', undrafted)
             .then(function(data, status, headers,config) {
               return data.data;
             })
