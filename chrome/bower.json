@@ -16,6 +16,8 @@
     "tests"
   ],
   "dependencies": {
-    "angular-c3": "~0.0.7"
+    "angular-c3": "~0.0.7",
+    "angular-ui-router": "~0.2.13"
   }
 }
+
