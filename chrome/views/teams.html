@@ -1,5 +1,5 @@
-<table ng-show="tab === 2" style ='border: 1px solid black;border-collapse: collapse;'>
-      <tr class='undrafted' ng-repeat='(team,stats) in state' ng-mouseenter="addOpponentStats()">
-        <td style ='border: 1px solid black;border-collapse: collapseß;'>{{team}}</td>
+<table style ='border: 1px solid black;border-collapse: collapse;'>
+      <tr class='undrafted' ng-repeat='(teamName,stats) in state' ng-mouseenter="addOpponentStats()">
+        <td style ='border: 1px solid black;border-collapse: collapse'>{{teamName}}</td>
       </tr>
-    </table>
+</table>
