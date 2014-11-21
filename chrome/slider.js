@@ -217,7 +217,7 @@ angular.module('gDPopup', ['gDraft.services', 'angular-c3'])
   }
 
   $scope.addOpponentStats = function(){
-    $scope.opponentStats = this.stats;
+    $scope.opponentStats = this.stats.team;
 
     console.log($scope.opponentStats)
 
@@ -337,6 +337,10 @@ angular.module('gDPopup', ['gDraft.services', 'angular-c3'])
       $scope.user = event.data.user;
     }
 
+    if (event.data.queue) {
+      $scope.queue = event.data.queue;
+    }
+
     if (event.data.state) {
       if (!$scope.user) {
         console.log("error: user not set");
@@ -362,10 +366,10 @@ angular.module('gDPopup', ['gDraft.services', 'angular-c3'])
 
         var state = $scope.state;
         var user = $scope.user;
-        console.log(user);
-        console.log(state[user]);
-        for (var key in state[user]) {
-          var player = state[user][key];
+        //console.log(user);
+        //console.log(state[user]);
+        for (var key in state[user].team) {
+          var player = state[user].team[key];
           console.log(player);
           for (var stat in player) {
             var data = player[stat];
