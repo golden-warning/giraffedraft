@@ -1,7 +1,25 @@
-angular.module('gDPopup', ['gDraft.services', 'angular-c3'])
+angular.module('gDPopup', ['gDraft.services', 'angular-c3','ui.router'])
 
-.controller('gDController', function($scope, $http, services, c3Factory){
-  $scope.undrafted = [];
+.config(function($stateProvider){
+
+  $stateProvider
+    .state('suggestions',{
+      controller:'gDController',
+      templateUrl:'./views/suggestions.html'
+    })
+    .state('queue',{
+      controller:'gDController',
+      templateUrl:'./views/queue.html'
+    })
+    .state('teams',{
+      controller:'gDController',
+      templateUrl:'./views/teams.html'
+    })
+      
+})
+
+.controller('gDController', function($scope, $http, services, c3Factory,$state){
+  $scope.undrafted = [{'Player':'KT'},{'Player': 'LBJ'},{'Player': 'SC'}];
   $scope.suggestions = [];
   $scope.drafted = [];
   $scope.user = '';
@@ -13,6 +31,12 @@ angular.module('gDPopup', ['gDraft.services', 'angular-c3'])
   };
   $scope.lineupSize = 12;
   $scope.normalizedTeamStats = {};
+
+  $scope.changeState = function(x){
+    console.log(x);
+    $state.go(x);
+    console.log(x);
+  }
 
   $scope.leagueAverages = {
     "TO": 113.58,

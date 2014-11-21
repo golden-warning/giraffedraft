@@ -7,16 +7,18 @@
 
   <div style='width:275' ng-init="tab = 1">
     <span ng-class="{active:tab===1}"> 
-      <a href ng-click="tab = 1">Suggestions</a>  
+      <a href ng-click="changeState('suggestions')">Suggestions</a>  
     </span>
     <span ng-class="{active:tab===2}"> 
-      <a href ng-click="tab = 2">Queue</a> 
+      <a href ng-click="changeState('queue')">Queue</a> 
     </span>
     <span ng-class="{active:tab===3}"> 
-      <a href ng-click="tab = 3">Teams</a> 
+      <a href ng-click="changeState('teams')">Teams</a> 
     </span>
   </div>   
-  <div style='height:15%;width:275px;overflow:scroll;font-size:1em' ng-mouseleave="removeStats()">
+
+  <div ui-view></div>
+  <!-- <div style='height:15%;width:275px;overflow:scroll;font-size:1em' ng-mouseleave="removeStats()">
     <table ng-show="tab === 1" style ='border: 1px solid black;border-collapse: collapse;'>
       <tr class='undrafted' ng-repeat='player in undrafted' ng-mouseenter="addPlayerStats()">
         <td style ='border: 1px solid black;border-collapse: collapse;'>{{player.Player}}</td>
@@ -32,7 +34,7 @@
         <td style ='border: 1px solid black;border-collapse: collapseß;'>{{team}}</td>
       </tr>
     </table>
-  </div>
+  </div> -->
 
   <!-- <div style='width:275px'>
     Suggestions
@@ -44,11 +46,12 @@
   </div> -->
   <c3-chart id="chart" config="config"></c3-chart>
   <br>
-  <ol>
+<!--   <ol>
     <li ng-repeat="(name, age) in state">{{name}}: {{age}}</li>
-  </ol>
+  </ol> -->
 
   <script src="lib/angular.js"></script>
+  <script src="bower_components/angular-ui-router/release/angular-ui-router.min.js" charset='utf-8'></script>
   <script src="bower_components/angular-c3/dist/c3-chart.js" charset='utf-8'></script>
   <script src="services/services.js"></script>
   <script src="slider.js"></script>
