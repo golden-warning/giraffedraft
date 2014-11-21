@@ -1,7 +1,7 @@
 <html ng-app="gDPopup">
 <head>
   <link rel="stylesheet" type="text/css" href="bower_components/angular-c3/dist/c3-chart.css">
-    <LINK href="styles.css" rel="stylesheet" type="text/css">
+    <LINK href="styles/styles.css" rel="stylesheet" type="text/css">
 </head>
 <body ng-controller='gDController'>
 
@@ -36,19 +36,19 @@
     </table>
   </div> -->
 
-  <!-- <div style='width:275px'>
+  <div style='width:275px'>
     Suggestions
     <ol>
       <li class='suggested' ng-repeat='suggested in suggestions'>
         {{suggested.Player}}
       </li>
     </ol>
-  </div> -->
+  </div>
   <c3-chart id="chart" config="config"></c3-chart>
   <br>
-<!--   <ol>
+  <ol>
     <li ng-repeat="(name, age) in state">{{name}}: {{age}}</li>
-  </ol> -->
+  </ol>
 
   <script src="lib/angular.js"></script>
   <script src="bower_components/angular-ui-router/release/angular-ui-router.min.js" charset='utf-8'></script>

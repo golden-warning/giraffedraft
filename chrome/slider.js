@@ -4,15 +4,12 @@ angular.module('gDPopup', ['gDraft.services', 'angular-c3','ui.router'])
 
   $stateProvider
     .state('suggestions',{
-      controller:'gDController',
       templateUrl:'./views/suggestions.html'
     })
     .state('queue',{
-      controller:'gDController',
       templateUrl:'./views/queue.html'
     })
     .state('teams',{
-      controller:'gDController',
       templateUrl:'./views/teams.html'
     })
       
@@ -241,6 +238,7 @@ angular.module('gDPopup', ['gDraft.services', 'angular-c3','ui.router'])
   }
 
   $scope.addOpponentStats = function(){
+    console.log(this.stats.team,'=====================================');
     $scope.opponentStats = this.stats.team;
 
     console.log($scope.opponentStats)
@@ -351,12 +349,11 @@ angular.module('gDPopup', ['gDraft.services', 'angular-c3','ui.router'])
 
   // service has a callback list
   // and this.onMessage function to store a callback
-  window.addEventListener("message", receiveMessage, false);
+  window.addEventListener("message", function(event){$scope.$apply(receiveMessage(event))}, false);
 
   function receiveMessage(event) {
     console.log("=======================message received in slider.js!======================");
-    console.log(event.data);
-
+    //console.log(event.data);
     if (event.data.user) {
       $scope.user = event.data.user;
     }
@@ -404,7 +401,7 @@ angular.module('gDPopup', ['gDraft.services', 'angular-c3','ui.router'])
       }
 
       // update angular bindings
-      $scope.$apply();
+      $scope.$digest();
 
       $scope.normalize();
 
