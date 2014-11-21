@@ -1,3 +1,15 @@
+#giraffedraft {
+
+}
+
+.giraffedraft-open {
+  display: '';
+}
+
+.giraffedraft-closed {
+  display: none;
+}
+
 #giraffedraft-toggle {
   font-size: 20px;
   top: 50px;

@@ -65,12 +65,12 @@ var onDraftMainPage = function() {
   return !!(document.querySelector('#draft-controls'));
 };
 
-var closeIFrame = function() {
-  document.querySelector('#giraffedraft').style.display = 'none';
+var closeSidebar = function() {
+  document.querySelector('#giraffedraft').className = 'giraffedraft-closed';
 };
 
-var openIFrame = function() {
-  document.querySelector('#giraffedraft').style.display = '';
+var openSidebar = function() {
+  document.querySelector('#giraffedraft').className = 'giraffedraft-open';
 };
 
 var sendState = function() {
@@ -86,6 +86,13 @@ var sendUser = function() {
 
   console.log("sending user:", user);
   w.postMessage({user: user}, '*');
+};
+
+var sendQueue = function() {
+  var w = document.querySelector('#giraffedraft').contentWindow;
+
+  console.log("sending queue:", queue);
+  w.postMessage({queue: queue}, '*');
 };
 
 var clickPlayers = function() {
@@ -109,16 +116,21 @@ var clickDraftGrid = function() {
 };
 
 var getPlayers = function(cb) {
-  clickTeams();
+  clickDraftGrid();
   // problem is here somewhere================================================
   function scrapePlayers() {
-    var players = document.querySelector('.ys-team-change');
+    var players = document.querySelector('.ys-results-grid').querySelectorAll('.ys-team');
     console.log(players);
+
     Array.prototype.slice.call(players).forEach(function(player) {
-      state[player.innerText] = {};
+      var draftPosition = player.getAttribute('data-id');
+
+      state[player.innerText.trim()] = {draftPosition: draftPosition, team: {}};
     });
   }
   scrapePlayers();
+  console.log('============== scraped players and positions =================');
+  console.log(state);
   cb();
 };
 
@@ -203,7 +215,7 @@ function scrapePlayerFromRBR(playerNode) {
 
   var stats = allStats[draftedPlayerRank];
 
-  state[fantasyPlayer][draftedPlayerRank] = stats;
+  state[fantasyPlayer]['team'][draftedPlayerRank] = stats;
 }
 
 var scrapeDraftState = function(cb) {
@@ -281,8 +293,9 @@ if (onDraftPage()) {
   // watch for main draft page
   insertSidebar("popup.html", true);
   console.log('in a draft');
-  openIFrame();
-  actionOnLoad(sync, '.NavTabs');
+  openSidebar();
+  // ys-order-list-container seems to load last/late enough that everything else is loaded.
+  actionOnLoad(sync, '#ys-order-list-container');
 }
 else {
   insertSidebar('http://giraffedraft.azurewebsites.net');
