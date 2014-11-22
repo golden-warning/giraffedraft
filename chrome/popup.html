@@ -6,16 +6,16 @@
 <body ng-controller='gDController'>
 
   <div style='width:275' ng-init="tab = 1">
-    <span ng-class="{active:tab===1}"> 
-      <a href ng-click="changeState('suggestions')">Suggestions</a>  
+    <span ng-class="{active:tab===1}">
+      <a href ng-click="changeState('suggestions')">Suggestions</a>
     </span>
-    <span ng-class="{active:tab===2}"> 
-      <a href ng-click="changeState('queue')">Queue</a> 
+    <span ng-class="{active:tab===2}">
+      <a href ng-click="changeState('queue')">Queue</a>
     </span>
-    <span ng-class="{active:tab===3}"> 
-      <a href ng-click="changeState('teams')">Teams</a> 
+    <span ng-class="{active:tab===3}">
+      <a href ng-click="changeState('teams')">Teams</a>
     </span>
-  </div>   
+  </div>
 
   <div ui-view></div>
   <!-- <div style='height:15%;width:275px;overflow:scroll;font-size:1em' ng-mouseleave="removeStats()">
@@ -40,7 +40,7 @@
     Suggestions
     <ol>
       <li class='suggested' ng-repeat='suggested in suggestions'>
-        {{suggested.Player}}
+        {{suggested.playerName}}
       </li>
     </ol>
   </div>
