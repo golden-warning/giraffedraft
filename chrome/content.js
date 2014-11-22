@@ -75,7 +75,7 @@ var openSidebar = function() {
 
 var sendState = function() {
   var w = document.querySelector('#giraffedraft').contentWindow;
-  //console.log(JSON.stringify(state));
+  ////console.log(JSON.stringify(state));
   w.postMessage({state: state}, '*');
 };
 
@@ -84,14 +84,14 @@ var sendUser = function() {
 
   var user = document.querySelector('.ys-order-user').querySelector('.Ell').innerText;
 
-  console.log("sending user:", user);
+  //console.log("sending user:", user);
   w.postMessage({user: user}, '*');
 };
 
 var sendQueue = function() {
   var w = document.querySelector('#giraffedraft').contentWindow;
 
-  console.log("sending queue:", queue);
+  //console.log("sending queue:", queue);
   w.postMessage({queue: queue}, '*');
 };
 
@@ -120,7 +120,7 @@ var getPlayers = function(cb) {
   // problem is here somewhere================================================
   function scrapePlayers() {
     var players = document.querySelector('.ys-results-grid').querySelectorAll('.ys-team');
-    console.log(players);
+    //console.log(players);
 
     Array.prototype.slice.call(players).forEach(function(player) {
       var draftPosition = player.getAttribute('data-id');
@@ -129,8 +129,8 @@ var getPlayers = function(cb) {
     });
   }
   scrapePlayers();
-  console.log('============== scraped players and positions =================');
-  console.log(state);
+ //console.log('============== scraped players and positions =================');
+ //console.log(state);
   cb();
 };
 
@@ -165,7 +165,7 @@ var getPlayerStats = function(cb) {
     statCategories.push(stat);
   }
 
-  console.log(statCategories);
+ //console.log(statCategories);
 
   // fill out allStats table
   Array.prototype.slice.call(players).forEach(function(player) {
@@ -192,7 +192,7 @@ var getPlayerStats = function(cb) {
 
   // Optional: save stats to chrome.storage,
   // re-save when out of date?
-  console.log(allStats);
+ //console.log(allStats);
   // console.log(allStats.length);
   // chrome.storage.local.set({allStats: allStats},
   //   function() {chrome.storage.local.get('allStats',
@@ -235,8 +235,8 @@ var scrapeQueue = function() {
     var playerRank = playerNode.children[0].innerText;
     queue[playerRank] = allStats[playerRank];
   });
-  console.log('================queue================');
-  console.log(queue);
+ //console.log('================queue================');
+ //console.log(queue);
   sendQueue();
 };
 
@@ -246,7 +246,7 @@ var initialize = function(cb) {
   //debugger;
   getPlayerStats(function() {
     getPlayers(function() {
-      console.log(state);
+     //console.log(state);
       setTimeout(function() {
         scrapeDraftState();
         scrapeQueue();
@@ -260,7 +260,7 @@ var initialize = function(cb) {
 // Get the player's name
 // Get the teams
 function sync() {
-  console.log('*************** calling sync ******************')
+ //console.log('*************** calling sync ******************')
   initialize(function() {
     sendUser();
     sendState();
@@ -273,15 +273,15 @@ function sync() {
     // use actionOnLoad because every time queue is changed, ys-queue-table reloads.
     actionOnLoad(scrapeQueue, '.ys-queue-table');
   });
-  console.log('****************** sending state *******************');
+ //console.log('****************** sending state *******************');
 }
 
 window.addEventListener("message", receiveMessage, false);
 function receiveMessage(event) {
-  console.log("=======================message received in content.js!======================");
-  console.log(event.data);
+  //console.log("=======================message received in content.js!======================");
+  //console.log(event.data);
   if (event.data.command === 'init') {
-    console.log('initializing');
+    //console.log('initializing');
     initialize(function() {});
   }
   if (event.data.command === 'sync') {
@@ -296,14 +296,14 @@ function receiveMessage(event) {
 if (onDraftPage()) {
   // watch for main draft page
   insertSidebar("popup.html", true);
-  console.log('in a draft');
+  //console.log('in a draft');
   openSidebar();
   // ys-order-list-container seems to load last/late enough that everything else is loaded.
   actionOnLoad(sync, '#ys-order-list-container');
 }
 else {
   insertSidebar('http://giraffedraft.azurewebsites.net');
-  console.log('not in draft');
+  //console.log('not in draft');
 }
 
 insertSidebarButton();
@@ -344,7 +344,7 @@ insertSidebarButton();
 function watchDraftAndUpdateState() {
   actionOnChange(function() {
     updateState();
-    console.log('booga');
+    //console.log('booga');
   },'#ys-order-list-container');
 }
 
@@ -363,7 +363,7 @@ function actionOnChange(action, selector, parent) {
     });
     var config = { attributes: true, childList: true, characterData: true, subtree: true };
     observer.observe(target, config);
-    console.log(observer);
+    //console.log(observer);
   }
 
   var target = document.querySelector(selector);
@@ -382,14 +382,14 @@ function actionOnChange(action, selector, parent) {
 function actionOnLoad(action, selector, parent) {
   if (parent) {
     document.querySelector(parent).arrive(selector, function() {
-      console.log(this);
+      //console.log(this);
       action();
       //document.unbindArrive(selector);
     });
   }
   else {
     document.arrive(selector, function() {
-      console.log(this);
+      //console.log(this);
       action();
       //document.unbindArrive(selector);
     });
