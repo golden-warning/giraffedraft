@@ -19,23 +19,37 @@
             "17":{"injured":false,"ADP":"20.9","FGM":"462","FGA":"967","FG%":".478","FTM":"345","FTA":"422","FT%":".819","3PTM":"65.7","PTS":"1336","REB":"556","AST":"137","ST":"65.7","BLK":"61.2","TO":"122","playerName":"Chris Bosh Mia - PF,C"}}
           };
 
+        function emptyArray(array) {
+          while (array.length > 0) {
+            array.pop();
+          }
+        }
+
+        function copyArray(array, destArray) {
+          while (array.length > 0) {
+            destArray.push(array.pop());
+          }
+        }
+
         function getSuggestions(undrafted){
           return $http.post('http://shotcaller-api.cloudapp.net/test/suggest', undrafted)
             .then(function(data, status, headers,config) {
+              //console.log(data.data);
+              emptyArray(suggestions);
+              copyArray(data.data, suggestions);
               return data.data;
             });
-
         }
 
-      return {
-        getSuggestions: getSuggestions,
-        // what happens if suggestions: []?
-        suggestions: suggestions,
-        state: state,
-        normalizedTeamStats: normalizedTeamStats,
-        lineupSize: lineupSize,
-        user: user
-      };
-    });
-
+        return {
+          getSuggestions: getSuggestions,
+          // what happens if suggestions: []?
+          suggestions: suggestions,
+          state: state,
+          normalizedTeamStats: normalizedTeamStats,
+          lineupSize: lineupSize,
+          user: user
+        };
+      }
+    );
 }).call(this);

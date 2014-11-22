@@ -15,7 +15,7 @@ angular.module('gDPopup', ['gDraft.services', 'angular-c3','ui.router'])
 
 })
 
-.controller('gDController', function($scope, $http, services, c3Factory,$state){
+.controller('gDController', function($scope, $http, services, c3Factory, $state){
   $scope.suggestions = services.suggestions;
   $scope.user = services.user;
   $scope.state = services.state;
@@ -159,7 +159,7 @@ angular.module('gDPopup', ['gDraft.services', 'angular-c3','ui.router'])
 
   $scope.addPlayerStats = function(){
     $scope.playerStats = this.player;
-    console.log(this.player);
+    //console.log(this.player);
     c3Factory.get('chart').then(function(chart) {
       chart.load({
         columns: [
@@ -206,10 +206,10 @@ angular.module('gDPopup', ['gDraft.services', 'angular-c3','ui.router'])
   }
 
   $scope.addOpponentStats = function(){
-    console.log(this.stats.team,'=====================================');
+    //console.log(this.stats.team,'=====================================');
     $scope.opponentStats = this.stats.team;
 
-    console.log($scope.opponentStats)
+    //console.log($scope.opponentStats)
 
     var FGM = 0;
     var FGA = 0;
@@ -241,7 +241,7 @@ angular.module('gDPopup', ['gDraft.services', 'angular-c3','ui.router'])
       TO += parseInt($scope.opponentStats[key].TO)
     };
 
-    console.log('stats', FGM, FGA, FTM, FTA, ThreePT, PTS, REB, AST, ST, BLK, TO)
+    //console.log('stats', FGM, FGA, FTM, FTA, ThreePT, PTS, REB, AST, ST, BLK, TO)
 
     FG = FGM*100/FGA;
     FT = FTM*100/FTA;
@@ -320,20 +320,23 @@ angular.module('gDPopup', ['gDraft.services', 'angular-c3','ui.router'])
   window.addEventListener("message", function(event){$scope.$apply(receiveMessage(event))}, false);
 
   function receiveMessage(event) {
-    console.log("=======================message received in slider.js!======================");
+    //console.log("=======================message received in slider.js!======================");
     //console.log(event.data);
     if (event.data.user) {
       $scope.user = event.data.user;
     }
 
     if (event.data.queue) {
-      console.log('=============== queue received! ====================');
+      //console.log('=============== queue received! ====================');
       $scope.queue = event.data.queue;
+      services.getSuggestions($scope.state).then(function(data) {
+        //console.log('yoyoyoyo');
+      });
     }
 
     if (event.data.state) {
       if (!$scope.user) {
-        console.log("error: user not set");
+        //console.log("error: user not set");
       }
       else {
         // reset scope and teamStats
@@ -360,13 +363,13 @@ angular.module('gDPopup', ['gDraft.services', 'angular-c3','ui.router'])
         //console.log(state[user]);
         for (var key in state[user].team) {
           var player = state[user].team[key];
-          console.log(player);
+          //console.log(player);
           for (var stat in player) {
             var data = player[stat];
             $scope.teamStats[stat] += parseFloat(data);
           }
         }
-        console.log($scope.teamStats);
+        //console.log($scope.teamStats);
       }
 
       // update angular bindings
