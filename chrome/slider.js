@@ -327,6 +327,7 @@ angular.module('gDPopup', ['gDraft.services', 'angular-c3','ui.router'])
     }
 
     if (event.data.queue) {
+      console.log('=============== queue received! ====================');
       $scope.queue = event.data.queue;
     }
 

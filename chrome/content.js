@@ -230,13 +230,14 @@ var scrapeDraftState = function(cb) {
 // Scrapes queue state. Should be run on load.
 var scrapeQueue = function() {
   queue = {};
-  var currentQueue = document.querySelector('.ys-queue-table').querySelector('tbody').querySelectorAll('.ys-player');
+  var currentQueue = document.querySelector('.ys-queue-container').querySelectorAll('.ys-player');
   Array.prototype.slice.call(currentQueue).forEach(function(playerNode) {
     var playerRank = playerNode.children[0].innerText;
     queue[playerRank] = allStats[playerRank];
   });
   console.log('================queue================');
   console.log(queue);
+  sendQueue();
 };
 
 
@@ -248,8 +249,7 @@ var initialize = function(cb) {
       console.log(state);
       setTimeout(function() {
         scrapeDraftState();
-        //scrapeQueue();
-        actionOnLoad(scrapeQueue, '.ys-queue-table');
+        scrapeQueue();
         cb();
       }, 2000);
     });
@@ -266,8 +266,11 @@ function sync() {
     sendState();
     sendQueue();
     clickPlayers();
-    console.log('here');
+    //console.log('here');
+    // set a listener to watch the draft.
     watchDraftAndUpdateState();
+    // set a listener on ys-queue-container to scrape queue whenever it updates.
+    actionOnChange(scrapeQueue, '.ys-queue-container');
   });
   console.log('****************** sending state *******************');
 }
@@ -372,7 +375,9 @@ function actionOnChange(action, selector, parent) {
   }
 }
 
-
+// actionOnLoad: uses arrive.js to watch for arrival of DOM element
+// at selector, and calls action() when it arrives.
+// To fix: Should check for existence of
 function actionOnLoad(action, selector, parent) {
   if (parent) {
     document.querySelector(parent).arrive(selector, function() {
