@@ -264,13 +264,14 @@ function sync() {
   initialize(function() {
     sendUser();
     sendState();
-    sendQueue();
+    //sendQueue();
     clickPlayers();
     //console.log('here');
     // set a listener to watch the draft.
     watchDraftAndUpdateState();
-    // set a listener on ys-queue-container to scrape queue whenever it updates.
-    actionOnChange(scrapeQueue, '.ys-queue-container');
+    // set a listener on ys-queue-table to scrape queue whenever it updates.
+    // use actionOnLoad because every time queue is changed, ys-queue-table reloads.
+    actionOnLoad(scrapeQueue, '.ys-queue-table');
   });
   console.log('****************** sending state *******************');
 }
