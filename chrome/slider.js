@@ -206,6 +206,7 @@ angular.module('gDPopup', ['gDraft.services', 'angular-c3','ui.router'])
   }
 
   $scope.addOpponentStats = function(){
+    console.log('add');
     //console.log(this.stats.team,'=====================================');
     $scope.opponentStats = this.stats.team;
 
@@ -268,8 +269,17 @@ angular.module('gDPopup', ['gDraft.services', 'angular-c3','ui.router'])
         ],
       });
     });
-  }
+  };
 
+  $scope.removeOpponentStats = function() {
+    console.log('remove');
+    //$scope.opponentStats = {};
+    c3Factory.get('chart').then(function(chart) {
+      chart.unload({
+        ids:['opponentStats']
+      });
+    });
+  };
   // var svg = d3.select("body").append("svg")
   //   .attr("width", "1000")
   //   .attr("height", "1000")
