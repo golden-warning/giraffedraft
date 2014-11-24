@@ -163,6 +163,7 @@ angular.module('gDPopup', ['gDraft.services', 'angular-c3','ui.router'])
     c3Factory.get('chart').then(function(chart) {
       chart.load({
         columns: [
+
           [
             'playerStats',
             $scope.playerStats['TO'] / $scope.leagueAverages['TO'] * $scope.lineupSize,
@@ -172,10 +173,10 @@ angular.module('gDPopup', ['gDraft.services', 'angular-c3','ui.router'])
             $scope.playerStats['REB'] / $scope.leagueAverages['REB'] * $scope.lineupSize,
             $scope.playerStats['PTS'] / $scope.leagueAverages['PTS'] * $scope.lineupSize,
             $scope.playerStats['3PTM'] / $scope.leagueAverages['3PTM'] * $scope.lineupSize,
-            $scope.playerStats['FT%'] / $scope.leagueAverages['FT%'] * $scope.lineupSize,
+            $scope.playerStats['FT%'],
             $scope.playerStats['FTA'] / $scope.leagueAverages['FTA'] * $scope.lineupSize,
             $scope.playerStats['FTM'] / $scope.leagueAverages['FTM'] * $scope.lineupSize,
-            $scope.playerStats["FG%"] / $scope.leagueAverages['FG%'] * $scope.lineupSize,
+            $scope.playerStats["FG%"],
             $scope.playerStats['FGA'] / $scope.leagueAverages['FGA'] * $scope.lineupSize,
             $scope.playerStats['FGM'] / $scope.leagueAverages['FGM'] * $scope.lineupSize
           ]
