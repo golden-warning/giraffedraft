@@ -11,7 +11,7 @@
 }
 
 #giraffedraft-toggle {
-  background-color: #662299;
+  /*background-color: #3261c3;*/
   cursor: pointer;
   font-family: "Helvetica Neue",Helvetica,Helvetica,Arial,sans-serif;
   line-height: normal;
@@ -33,12 +33,26 @@
   -webkit-appearance: none;
   border: none;
   color:#fff;
+
+      box-shadow: -3px 3px 5px rgba(0, 0, 0, 1.5);
+
 }
 
 .giraffedraft-toggle-open {
   right: 300px;
+    background-color: #3b2eca !important;
 }
+
 
 .giraffedraft-toggle-closed {
   right: 0px;
+    background-color: #3261c3;
+
 }
+.giraffedraft-toggle-closed:hover {
+    background-color: #3b2eca !important;
+
+}
+
+#3261c3
+ #3b2eca!important
