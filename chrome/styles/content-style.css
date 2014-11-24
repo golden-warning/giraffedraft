@@ -11,6 +11,10 @@
 }
 
 #giraffedraft-toggle {
+  background-color: #662299;
+  cursor: pointer;
+  font-family: "Helvetica Neue",Helvetica,Helvetica,Arial,sans-serif;
+  line-height: normal;
   font-size: 20px;
   top: 50px;
   position: fixed;
@@ -18,6 +22,17 @@
   transform: rotate(-90deg);
   transform-origin: 100% 100%;
   margin: 0px;
+  padding: .8125rem 1.5rem .75rem;
+  font-weight: 700!important;
+  text-decoration: none;
+  text-align: center;
+  display: inline-block;
+  -webkit-transition: background-color 300ms ease-out;
+  -moz-transition: background-color 300ms ease-out;
+  transition: background-color 300ms ease-out;
+  -webkit-appearance: none;
+  border: none;
+  color:#fff;
 }
 
 .giraffedraft-toggle-open {

@@ -142,7 +142,7 @@ angular.module('gDPopup', ['gDraft.services', 'angular-c3','ui.router'])
         tick:{
           rotate:90
         },
-        categories: ['FGM', 'FGA',	'FG%', 'FTM',	'FTA', 'FT%', '3PTM',	'PTS',	'REB',	'AST',	'ST',	'BLK',	'TO']
+        categories: ['FGM', 'FGA',  'FG%', 'FTM', 'FTA', 'FT%', '3PTM', 'PTS',  'REB',  'AST',  'ST', 'BLK',  'TO']
       },
       y: {
         max: 120,
