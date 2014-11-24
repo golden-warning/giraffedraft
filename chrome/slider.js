@@ -343,9 +343,6 @@ angular.module('gDPopup', ['gDraft.services', 'angular-c3','ui.router'])
     if (event.data.queue) {
       //console.log('=============== queue received! ====================');
       $scope.queue = event.data.queue;
-      services.getSuggestions($scope.state).then(function(data) {
-        //console.log('yoyoyoyo');
-      });
     }
 
     if (event.data.state) {
@@ -414,5 +411,9 @@ angular.module('gDPopup', ['gDraft.services', 'angular-c3','ui.router'])
         });
       });
     }
+
+    services.getSuggestions($scope.state).then(function(data) {
+    });
+
   }
 });
