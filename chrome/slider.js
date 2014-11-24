@@ -165,27 +165,21 @@ angular.module('gDPopup', ['gDraft.services', 'angular-c3','ui.router'])
         columns: [
           [
             'playerStats',
-            1,
-            3,
-            3,
-            4,
-            5,
-            6,7,8,9,10,11,12,13
-            // $scope.playerStats['FGM'],
-            // $scope.playerStats['FGA'],
-            // $scope.playerStats["FG%"],
-            // $scope.playerStats['FTM'],
-            // $scope.playerStats['FTA'],
-            // $scope.playerStats['FT%'],
-            // $scope.playerStats['3PTM'],
-            // $scope.playerStats['PTS'],
-            // $scope.playerStats['REB'],
-            // $scope.playerStats['AST'],
-            // $scope.playerStats['ST'],
-            // $scope.playerStats['BLK'],
-            // $scope.playerStats['TO'],
+            $scope.playerStats['TO'] / $scope.leagueAverages['TO'] * $scope.lineupSize,
+            $scope.playerStats['BLK'] / $scope.leagueAverages['BLK'] * $scope.lineupSize,
+            $scope.playerStats['ST'] / $scope.leagueAverages['ST'] * $scope.lineupSize,
+            $scope.playerStats['AST'] / $scope.leagueAverages['AST'] * $scope.lineupSize,
+            $scope.playerStats['REB'] / $scope.leagueAverages['REB'] * $scope.lineupSize,
+            $scope.playerStats['PTS'] / $scope.leagueAverages['PTS'] * $scope.lineupSize,
+            $scope.playerStats['3PTM'] / $scope.leagueAverages['3PTM'] * $scope.lineupSize,
+            $scope.playerStats['FT%'] / $scope.leagueAverages['FT%'] * $scope.lineupSize,
+            $scope.playerStats['FTA'] / $scope.leagueAverages['FTA'] * $scope.lineupSize,
+            $scope.playerStats['FTM'] / $scope.leagueAverages['FTM'] * $scope.lineupSize,
+            $scope.playerStats["FG%"] / $scope.leagueAverages['FG%'] * $scope.lineupSize,
+            $scope.playerStats['FGA'] / $scope.leagueAverages['FGA'] * $scope.lineupSize,
+            $scope.playerStats['FGM'] / $scope.leagueAverages['FGM'] * $scope.lineupSize
           ]
-        ],
+        ]
       });
     });
   }
@@ -272,11 +266,21 @@ angular.module('gDPopup', ['gDraft.services', 'angular-c3','ui.router'])
   };
 
   $scope.removeOpponentStats = function() {
-    console.log('remove');
+    //console.log('remove');
     //$scope.opponentStats = {};
     c3Factory.get('chart').then(function(chart) {
       chart.unload({
         ids:['opponentStats']
+      });
+    });
+  };
+
+  $scope.removePlayerStats = function() {
+    //console.log('remove');
+    //$scope.opponentStats = {};
+    c3Factory.get('chart').then(function(chart) {
+      chart.unload({
+        ids:['playerStats']
       });
     });
   };
