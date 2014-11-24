@@ -159,7 +159,7 @@ angular.module('gDPopup', ['gDraft.services', 'angular-c3','ui.router'])
 
   $scope.addPlayerStats = function(){
     $scope.playerStats = this.player;
-    //console.log(this.player);
+    console.log(this.player);
     c3Factory.get('chart').then(function(chart) {
       chart.load({
         columns: [
