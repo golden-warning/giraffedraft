@@ -133,7 +133,7 @@ angular.module('gDPopup', ['gDraft.services', 'angular-c3','ui.router'])
     axis: {
       x: {
         height:60,
-        max: 11,
+        max: 10,
         type: 'category',
         tick:{
           rotate:90
