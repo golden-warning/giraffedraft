@@ -32,7 +32,7 @@
         }
 
         function getSuggestions(undrafted){
-          return $http.post('http://shotcaller-api.cloudapp.net/test/suggest', undrafted)
+          return $http.post('http://shotcaller-api.cloudapp.net/api/suggest', undrafted)
             .then(function(data, status, headers,config) {
               //console.log(data.data);
               emptyArray(suggestions);
