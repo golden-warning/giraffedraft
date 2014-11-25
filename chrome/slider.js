@@ -98,12 +98,10 @@ angular.module('gDPopup', ['gDraft.services', 'angular-c3','ui.router'])
       columns: [
         [
           'teamStats',
-          $scope.teamStats['FGM'],
-          $scope.teamStats['FGA'],
           $scope.teamStats["FG%"],
-          $scope.teamStats['FTM'],
-          $scope.teamStats['FTA'],
           $scope.teamStats['FT%'],
+          $scope.teamStats['FGM'],
+          $scope.teamStats['FTM'],
           $scope.teamStats['3PTM'],
           $scope.teamStats['PTS'],
           $scope.teamStats['REB'],
@@ -114,12 +112,10 @@ angular.module('gDPopup', ['gDraft.services', 'angular-c3','ui.router'])
         ],
         [
           'playerStats',
-          $scope.playerStats['FGM'],
-          $scope.playerStats['FGA'],
           $scope.playerStats["FG%"],
-          $scope.playerStats['FTM'],
-          $scope.playerStats['FTA'],
           $scope.playerStats['FT%'],
+          $scope.playerStats['FGM'],
+          $scope.playerStats['FTM'],
           $scope.playerStats['3PTM'],
           $scope.playerStats['PTS'],
           $scope.playerStats['REB'],
@@ -142,7 +138,7 @@ angular.module('gDPopup', ['gDraft.services', 'angular-c3','ui.router'])
         tick:{
           rotate:90
         },
-        categories: ['FGM', 'FGA',  'FG%', 'FTM', 'FTA', 'FT%', '3PTM', 'PTS',  'REB',  'AST',  'ST', 'BLK',  'TO']
+        categories: ['FG%', 'FT%', 'FGM', 'FTM', '3PTM', 'PTS',  'REB',  'AST',  'ST', 'BLK',  'TO']
       },
       y: {
         max: 120,
@@ -150,8 +146,13 @@ angular.module('gDPopup', ['gDraft.services', 'angular-c3','ui.router'])
       }
     },
     size: {
-      height: window.innerHeight * 0.6,
-      width: '275'
+      height: window.innerHeight - 200,
+      width: '250'
+    },
+    onresized: function() {
+      c3Factory.get('chart').then(function(chart) {
+        chart.resize({height: window.innerHeight - 200});
+      });
     }
   };
 
@@ -165,19 +166,17 @@ angular.module('gDPopup', ['gDraft.services', 'angular-c3','ui.router'])
 
           [
             'playerStats',
-            $scope.playerStats['TO'] / $scope.leagueAverages['TO'] * $scope.lineupSize,
-            $scope.playerStats['BLK'] / $scope.leagueAverages['BLK'] * $scope.lineupSize,
-            $scope.playerStats['ST'] / $scope.leagueAverages['ST'] * $scope.lineupSize,
-            $scope.playerStats['AST'] / $scope.leagueAverages['AST'] * $scope.lineupSize,
-            $scope.playerStats['REB'] / $scope.leagueAverages['REB'] * $scope.lineupSize,
-            $scope.playerStats['PTS'] / $scope.leagueAverages['PTS'] * $scope.lineupSize,
-            $scope.playerStats['3PTM'] / $scope.leagueAverages['3PTM'] * $scope.lineupSize,
-            $scope.playerStats['FT%'],
-            $scope.playerStats['FTA'] / $scope.leagueAverages['FTA'] * $scope.lineupSize,
-            $scope.playerStats['FTM'] / $scope.leagueAverages['FTM'] * $scope.lineupSize,
             $scope.playerStats["FG%"],
-            $scope.playerStats['FGA'] / $scope.leagueAverages['FGA'] * $scope.lineupSize,
-            $scope.playerStats['FGM'] / $scope.leagueAverages['FGM'] * $scope.lineupSize
+            $scope.playerStats['FT%'],
+            $scope.playerStats['FGM'] / $scope.leagueAverages['FGM'] * $scope.lineupSize,
+            $scope.playerStats['FTM'] / $scope.leagueAverages['FTM'] * $scope.lineupSize,
+            $scope.playerStats['3PTM'] / $scope.leagueAverages['3PTM'] * $scope.lineupSize,
+            $scope.playerStats['PTS'] / $scope.leagueAverages['PTS'] * $scope.lineupSize,
+            $scope.playerStats['REB'] / $scope.leagueAverages['REB'] * $scope.lineupSize,
+            $scope.playerStats['AST'] / $scope.leagueAverages['AST'] * $scope.lineupSize,
+            $scope.playerStats['ST'] / $scope.leagueAverages['ST'] * $scope.lineupSize,
+            $scope.playerStats['BLK'] / $scope.leagueAverages['BLK'] * $scope.lineupSize,
+            $scope.playerStats['TO'] / $scope.leagueAverages['TO'] * $scope.lineupSize,
           ]
         ]
       });
@@ -223,10 +222,10 @@ angular.module('gDPopup', ['gDraft.services', 'angular-c3','ui.router'])
 
 
     for (key in $scope.opponentStats) {
+      FGA += parseInt($scope.opponentStats[key].FGA);
+      FTA += parseInt($scope.opponentStats[key].FTA);
       FGM += parseInt($scope.opponentStats[key].FGM)
-      FGA += parseInt($scope.opponentStats[key].FGA)
       FTM += parseInt($scope.opponentStats[key].FTM)
-      FTA += parseInt($scope.opponentStats[key].FTA)
       ThreePT += parseInt($scope.opponentStats[key]['3PTM'])
       PTS += parseInt($scope.opponentStats[key].PTS)
       REB += parseInt($scope.opponentStats[key].REB)
@@ -246,12 +245,10 @@ angular.module('gDPopup', ['gDraft.services', 'angular-c3','ui.router'])
         columns: [
           [
             'opponentStats',
-            FGM* 100 / ($scope.leagueAverages['FGM'] * $scope.lineupSize),
-            FGA* 100 / ($scope.leagueAverages['FGA'] * $scope.lineupSize),
             FG,
-            FTM* 100 / ($scope.leagueAverages['FTM'] * $scope.lineupSize),
-            FTA* 100 / ($scope.leagueAverages['FTA'] * $scope.lineupSize),
             FT,
+            FGM* 100 / ($scope.leagueAverages['FGM'] * $scope.lineupSize),
+            FTM* 100 / ($scope.leagueAverages['FTM'] * $scope.lineupSize),
             ThreePT * 100 / ($scope.leagueAverages['3PTM'] * $scope.lineupSize),
             PTS* 100 / ($scope.leagueAverages['PTS'] * $scope.lineupSize),
             REB* 100 / ($scope.leagueAverages['REB'] * $scope.lineupSize),
@@ -393,12 +390,10 @@ angular.module('gDPopup', ['gDraft.services', 'angular-c3','ui.router'])
           columns: [
             [
               'teamStats',
-              $scope.normalizedTeamStats['FGM'],
-              $scope.normalizedTeamStats['FGA'],
               $scope.normalizedTeamStats["FG%"],
-              $scope.normalizedTeamStats['FTM'],
-              $scope.normalizedTeamStats['FTA'],
               $scope.normalizedTeamStats['FT%'],
+              $scope.normalizedTeamStats['FGM'],
+              $scope.normalizedTeamStats['FTM'],
               $scope.normalizedTeamStats['3PTM'],
               $scope.normalizedTeamStats['PTS'],
               $scope.normalizedTeamStats['REB'],

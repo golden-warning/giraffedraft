@@ -12,8 +12,9 @@ function insertSidebar(src, isInternalUrl) {
 
   iframe.id = 'giraffedraft';
   iframe.align = 'right';
-  iframe.width = '300';
+  iframe.width = '271';
   iframe.height = '100%';
+  iframe.frameBorder = '0';
   iframe.style.position = "fixed";
   iframe.style.top = '0px';
   iframe.style.right = '0px';
