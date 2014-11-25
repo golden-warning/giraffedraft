@@ -39,8 +39,10 @@
 
 }
 
+#giraffedraft-toggle:focus {outline:0 !important;}
+
 .giraffedraft-toggle-open {
-  right: 300px;
+  right: 271px;
     background-color: #3b2eca !important;
 }
 
