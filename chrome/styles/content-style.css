@@ -33,8 +33,9 @@
   -webkit-appearance: none;
   border: none;
   color:#fff;
-
-      box-shadow: -3px 3px 5px rgba(0, 0, 0, 1.5);
+  border-top-left-radius: 5.5px;
+  border-top-right-radius: 5.5px;
+  box-shadow: -3px -3px 3px rgba(0, 0, 0, 0.8);
 
 }
 
@@ -53,6 +54,3 @@
     background-color: #3b2eca !important;
 
 }
-
-#3261c3
- #3b2eca!important
