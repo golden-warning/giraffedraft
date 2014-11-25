@@ -3,7 +3,7 @@
   <link rel="stylesheet" type="text/css" href="bower_components/angular-c3/dist/c3-chart.css">
     <LINK href="styles/styles.css" rel="stylesheet" type="text/css">
 </head>
-<body ng-controller='gDController'>
+<body ng-controller='gDController' ng-init='changeState("suggestions"); tog=1'>
 
   <ul class='gd-tabs'>
     <li class='gd-tab left' ng-class='{"clicked":tog==1}' ng-click="changeState('suggestions'); tog=1">
