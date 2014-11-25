@@ -1,7 +1,7 @@
 body {
   height:100%;
   width:275px;
-  background-color: #FFF;
+  background-color: #222;
 }
 
 .togglers {
@@ -14,6 +14,9 @@ body {
   color: purple;
 }
 
+.c3-axis-x{
+  color:green;
+}
 .gd-chart {
   position: absolute;
   bottom: 0px;
