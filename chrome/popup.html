@@ -5,21 +5,27 @@
 </head>
 <body ng-controller='gDController'>
 
-  <div style='width:275' ng-init="tab = 1">
-    <span ng-class="{active:tab===1}">
-      <a class="togglers" href ng-click="changeState('suggestions')">Suggestions</a>
-    </span>
-    <span ng-class="{active:tab===2}">
-      <a class="togglers" href ng-click="changeState('queue')">Queue</a>
-    </span>
-    <span ng-class="{active:tab===3}">
-      <a class="togglers" href ng-click="changeState('teams')">Teams</a>
-    </span>
+  <ul class='gd-tabs'>
+    <li class='gd-tab left' ng-class='{"clicked":tog==1}' ng-click="changeState('suggestions'); tog=1">
+      <br>
+      <b>Suggestions</b>
+    </li>
+    <li class='gd-tab' ng-class='{"clicked":tog==2}'  ng-click="changeState('queue'); tog=2">
+      <br>
+      <b>Queue</b>
+    </li>
+    <li class='gd-tab right' ng-class='{"clicked":tog==3}' ng-click="changeState('teams'); tog=3">
+      <br>
+      <b>Teams</b>
+    </li>
+  </ul>
+
+  <div class='gd-tables' ui-view></div>
+
+  <div class='gd-chart'>
+    <c3-chart id="chart" config="config"></c3-chart>
   </div>
 
-  <div ui-view></div>
-
-  <c3-chart id="chart" config="config"></c3-chart>
 
   <script src="lib/angular.js"></script>
   <script src="bower_components/angular-ui-router/release/angular-ui-router.min.js" charset='utf-8'></script>

@@ -1,6 +1,6 @@
 body {
-  height:100%; 
-  width:150px;
+  height:100%;
+  width:275px;
   background-color: #FFF;
 }
 
@@ -10,6 +10,80 @@ body {
 }
 
 .togglerTable{
-  width:100%;
+  width: 100%;
   color: purple;
 }
+
+.gd-chart {
+  position: absolute;
+  bottom: 0px;
+}
+
+.gd-table {
+  width: 100%;
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+
+.gd-tables {
+  background-color: white;
+  margin-top: 5px;
+  height: 200px;
+  width: 269px;
+  overflow: scroll;
+  border-right: solid;
+  border-left: solid;
+  border-bottom: solid;
+  border-width: 3px;
+  border-color: #3b2eca;
+}
+
+.gd-tabs {
+  background-color: #3b2eca;
+  height: 40px;
+  -webkit-padding-start: 0px;
+  margin-bottom: 0px;
+  border-top-left-radius: 1px;
+
+}
+
+.gd-tab {
+  font-family: sans-serif;
+  text-align: center;
+  vertical-align: bottom;
+  font-size: 12px;
+  display: block;
+  float: left;
+  background-color: #3b2eca;
+  padding: 0px;
+  padding-bottom: 8px;
+  margin: 0px;
+  height: 30px;
+  width: 90.5px;
+  border-top-right-radius: 1em;
+  border-top-left-radius: 1em;
+  position: relative;
+  bottom: -7px;
+  border-left: solid;
+  border-color: black;
+  border-width: 1px;
+  color: white;
+}
+
+.gd-tab:hover {
+  background-color: #3261c3;
+}
+
+.gd-tab.clicked {
+  background-color: white;
+  color: black;
+}
+
+.gd-tab.right {
+  border-top-right-radius: 1em;
+}
+
+.gd-tab.left {
+  border-top-left-radius: 1em;
+}
+>>>>>>> Sidebar styling
