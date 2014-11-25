@@ -17,6 +17,7 @@ body {
 .gd-chart {
   position: absolute;
   bottom: 0px;
+  height: 70%;
 }
 
 .gd-table {
@@ -28,7 +29,7 @@ body {
 .gd-tables {
   background-color: white;
   margin-top: 0px;
-  height: 200px;
+  height: 150px;
   width: 269px;
   overflow: scroll;
   border-right: solid;
@@ -40,11 +41,16 @@ body {
 
 .gd-tabs {
   background-color: #3b2eca;
-  height: 45px;
+  height: 28px;
   -webkit-padding-start: 0px;
   margin-bottom: 0px;
   border-top-left-radius: 1px;
+}
 
+.gd-tab-text {
+  position: relative;
+  top: 8.5px;
+  color: white;
 }
 
 .gd-tab {
@@ -56,18 +62,17 @@ body {
   float: left;
   background-color: #3b2eca;
   padding: 0px;
-  padding-bottom: 8px;
+  padding-bottom: 0px;
   margin: 0px;
-  height: 30px;
+  height: 28px;
   width: 89px;
   border-top-right-radius: 1em;
   border-top-left-radius: 1em;
   position: relative;
-  bottom: -7px;
+  bottom: -3px;
   border-left: solid;
   border-color: black;
   border-width: 1px;
-  color: white;
 }
 
 .gd-tab:hover {
@@ -76,6 +81,9 @@ body {
 
 .gd-tab.clicked {
   background-color: white;
+}
+
+.gd-tab.clicked span {
   color: black;
 }
 
@@ -87,4 +95,7 @@ body {
   margin-left: 2px;
   border-top-left-radius: 1em;
 }
->>>>>>> Sidebar styling
+
+tr:hover {
+  background-color: #3261c3;
+}

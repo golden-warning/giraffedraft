@@ -150,10 +150,9 @@ angular.module('gDPopup', ['gDraft.services', 'angular-c3','ui.router'])
       }
     },
     size: {
-      height: screen.height - 400,
+      height: window.innerHeight * 0.6,
       width: '275'
     }
-
   };
 
 
