@@ -1,5 +1,5 @@
 {
-    "name": "BrowserActionExtension",
+    "name": "Fantasy Shot Caller",
     "version": "0.0.1",
     "manifest_version": 2,
     "browser_action": {
@@ -12,8 +12,7 @@
     },
     "content_scripts": [
       {
-        //"matches": ["http://*.yahoo.com/*"],
-        "matches": ["<all_urls>"],
+        "matches": ["http://*.yahoo.com/*"],
         "js": ["lib/angular.js", "lib/arrive-2.0.0.min.js", "content.js"],
         "css": ["styles/content-style.css"]
       }
