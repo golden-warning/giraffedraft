@@ -17,7 +17,6 @@ body {
 .gd-chart {
   position: absolute;
   bottom: 0px;
-  height: 70%;
 }
 
 .gd-table {
@@ -30,7 +29,7 @@ body {
   background-color: white;
   margin-top: 0px;
   height: 150px;
-  width: 269px;
+  width: 245px;
   overflow: scroll;
   border-right: solid;
   border-left: solid;
@@ -42,6 +41,7 @@ body {
 .gd-tabs {
   background-color: #3b2eca;
   height: 28px;
+  width: 251px;
   -webkit-padding-start: 0px;
   margin-bottom: 0px;
   border-top-left-radius: 1px;
@@ -65,7 +65,7 @@ body {
   padding-bottom: 0px;
   margin: 0px;
   height: 28px;
-  width: 89px;
+  width: 81px;
   border-top-right-radius: 1em;
   border-top-left-radius: 1em;
   position: relative;
