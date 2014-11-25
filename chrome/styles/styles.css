@@ -1,7 +1,9 @@
 body {
   height:100%;
   width:250px;
-  background-color: #222;
+  /*background-color: #2D2D2D;*/
+
+  background: linear-gradient(#403F3D, #222222);
 }
 
 .togglers {
@@ -29,7 +31,7 @@ body {
 }
 
 .gd-tables {
-  background-color: white;
+  background-color: #D3D1CE;
   margin-top: 0px;
   height: 150px;
   width: 245px;
@@ -38,11 +40,11 @@ body {
   border-left: solid;
   border-bottom: solid;
   border-width: 3px;
-  border-color: #3b2eca;
+  border-color: #3261c3;
 }
 
 .gd-tabs {
-  background-color: #3b2eca;
+  background-color: #3261c3;
   height: 28px;
   width: 251px;
   -webkit-padding-start: 0px;
@@ -63,7 +65,7 @@ body {
   font-size: 12px;
   display: block;
   float: left;
-  background-color: #3b2eca;
+  background-color: #3261c3;
   padding: 0px;
   padding-bottom: 0px;
   margin: 0px;
@@ -79,11 +81,11 @@ body {
 }
 
 .gd-tab:hover {
-  background-color: #3261c3;
+  background-color: #3b2eca;
 }
 
 .gd-tab.clicked {
-  background-color: white;
+  background-color: #D3D1CE;
 }
 
 .gd-tab.clicked span {

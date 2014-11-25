@@ -128,7 +128,13 @@ angular.module('gDPopup', ['gDraft.services', 'angular-c3','ui.router'])
       type: 'bar',
       groups: [
         ['playerStats', 'teamStats']
-      ]
+      ],
+      colors: {
+        'opponentStats': '#8D1500'
+      },
+      color: function(color, data) {
+        return data.x > 1 ? d3.rgb(color).darker(-2) : color;
+      }
     },
     axis: {
       x: {
