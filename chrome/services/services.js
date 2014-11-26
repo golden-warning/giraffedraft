@@ -11,6 +11,7 @@
         var normalizedTeamStats = {};
         var lineupSize = 12;
         var user = '';
+        var allStats = {};
 
         var state = {
           hossein: {"2":{"injured":false,"ADP":"2.6","FGM":"583","FGA":"1102","FG%":".530","FTM":"326","FTA":"411","FT%":".793","3PTM":"2.5","PTS":"1496","REB":"682","AST":"112","ST":"107","BLK":"202","TO":"110","playerName":"Anthony Davis NO - PF,C"}},
@@ -34,7 +35,7 @@
         function getSuggestions(undrafted){
           return $http.post('http://shotcaller-api.cloudapp.net/api/suggest', undrafted)
             .then(function(data, status, headers,config) {
-              //console.log(data.data);
+              // data is an array of names
               emptyArray(suggestions);
               copyArray(data.data, suggestions);
               return data.data;

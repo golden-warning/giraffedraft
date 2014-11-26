@@ -21,6 +21,8 @@ angular.module('gDPopup', ['gDraft.services', 'angular-c3','ui.router'])
   $scope.state = services.state;
   $scope.lineupSize = services.lineupSize;
   $scope.normalizedTeamStats = {};
+  $scope.allStats = {};
+  $scope.playerTable = {};
 
   $scope.changeState = function(x){
     //console.log(x);
@@ -336,6 +338,18 @@ angular.module('gDPopup', ['gDraft.services', 'angular-c3','ui.router'])
   // and this.onMessage function to store a callback
   window.addEventListener("message", function(event){$scope.$apply(receiveMessage(event))}, false);
 
+  // Place suggestions into $scope.suggestions.
+  // data is an array of numbers corresponding to player rank.
+  function processSuggestions(data) {
+    console.log('processing');
+    while ($scope.suggestions.length > 0) {
+      $scope.suggestions.pop();
+    }
+    while (data.length > 0) {
+      $scope.suggestions.push($scope.allStats[data.shift()]);
+    }
+  }
+
   function receiveMessage(event) {
     //console.log("=======================message received in slider.js!======================");
     //console.log(event.data);
@@ -411,10 +425,22 @@ angular.module('gDPopup', ['gDraft.services', 'angular-c3','ui.router'])
           ],
         });
       });
+
+      services.getSuggestions({state: $scope.state, players: $scope.playerTable}).then(processSuggestions);
     }
 
-    services.getSuggestions($scope.state).then(function(data) {
-    });
+    if (event.data.allStats) {
+      $scope.allStats = event.data.allStats;
+      console.log($scope.allStats);
+      for (var key in $scope.allStats) {
+        // playerTable: {rank: playername}
+        $scope.playerTable[parseInt(key)] = $scope.allStats[key].playerName;
+      }
+      console.log($scope.playerTable);
+    }
+
+    // Send state and allStats to API
+    services.getSuggestions({state: $scope.state, players: $scope.playerTable}).then(processSuggestions);
 
   }
 });
