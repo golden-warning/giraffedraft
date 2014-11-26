@@ -123,6 +123,7 @@ var clickDraftGrid = function() {
 
 var getPlayers = function(cb) {
   clickDraftGrid();
+  var user = document.querySelector('.ys-order-user').querySelector('.Ell').innerText;
   // problem is here somewhere================================================
   function scrapePlayers() {
     var players = document.querySelector('.ys-results-grid').querySelectorAll('.ys-team');
@@ -130,8 +131,12 @@ var getPlayers = function(cb) {
 
     Array.prototype.slice.call(players).forEach(function(player) {
       var draftPosition = player.getAttribute('data-id');
-
-      state[player.innerText.trim()] = {draftPosition: draftPosition, team: {}};
+      var obj = {draftPosition: draftPosition, team: {}, isPlayer: false};
+      var playerName = player.innerText.trim();
+      if (playerName === user) {
+        obj.isPlayer = true;
+      }
+      state[playerName] = obj;
     });
   }
   scrapePlayers();

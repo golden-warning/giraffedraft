@@ -341,13 +341,25 @@ angular.module('gDPopup', ['gDraft.services', 'angular-c3','ui.router'])
   // Place suggestions into $scope.suggestions.
   // data is an array of numbers corresponding to player rank.
   function processSuggestions(data) {
+    data = data.data;
     console.log('processing');
+    console.log(data);
     while ($scope.suggestions.length > 0) {
       $scope.suggestions.pop();
     }
     while (data.length > 0) {
       $scope.suggestions.push($scope.allStats[data.shift()]);
     }
+  }
+
+  // Extracts a player's full name from their Yahoo player string (Name Team - Position)
+  // ex: "Joey Dorsey Hou - PF,C",
+  // ex: "Johnny O'Bryant Mil - PF"
+  function playerNameFromPlayerString(playerString) {
+    var nameAndTeam = playerString.split(' - ');
+    nameAndTeam = nameAndTeam[0].split(' ');
+    nameAndTeam.pop();
+    return nameAndTeam.join(' ');
   }
 
   function receiveMessage(event) {
@@ -431,15 +443,18 @@ angular.module('gDPopup', ['gDraft.services', 'angular-c3','ui.router'])
 
     if (event.data.allStats) {
       $scope.allStats = event.data.allStats;
-      console.log($scope.allStats);
+      //console.log($scope.allStats);
       for (var key in $scope.allStats) {
         // playerTable: {rank: playername}
-        $scope.playerTable[parseInt(key)] = $scope.allStats[key].playerName;
+        $scope.playerTable[parseInt(key)] = playerNameFromPlayerString($scope.allStats[key].playerName);
       }
-      console.log($scope.playerTable);
+      //console.log(JSON.stringify($scope.playerTable));
     }
 
     // Send state and allStats to API
+
+    //console.log($scope.state);
+    console.log(JSON.stringify({state: $scope.state, players: $scope.playerTable}));
     services.getSuggestions({state: $scope.state, players: $scope.playerTable}).then(processSuggestions);
 
   }
