@@ -35,10 +35,7 @@
         function getSuggestions(undrafted){
           return $http.post('http://shotcaller-api.cloudapp.net/api/suggest', undrafted)
             .then(function(data, status, headers,config) {
-              // data is an array of names
-              emptyArray(suggestions);
-              copyArray(data.data, suggestions);
-              return data.data;
+              return data;
             });
         }
 
