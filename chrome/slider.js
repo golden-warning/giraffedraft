@@ -167,7 +167,7 @@ angular.module('gDPopup', ['gDraft.services', 'angular-c3','ui.router'])
 
   $scope.addPlayerStats = function(){
     $scope.playerStats = this.player;
-    console.log(this.player);
+    //console.log(this.player);
     c3Factory.get('chart').then(function(chart) {
       chart.load({
         columns: [
@@ -342,8 +342,8 @@ angular.module('gDPopup', ['gDraft.services', 'angular-c3','ui.router'])
   // data is an array of numbers corresponding to player rank.
   function processSuggestions(data) {
     data = data.data;
-    console.log('processing');
-    console.log(data);
+    //console.log('processing');
+    //console.log(data);
     while ($scope.suggestions.length > 0) {
       $scope.suggestions.pop();
     }
@@ -454,7 +454,7 @@ angular.module('gDPopup', ['gDraft.services', 'angular-c3','ui.router'])
     // Send state and allStats to API
 
     //console.log($scope.state);
-    console.log(JSON.stringify({state: $scope.state, players: $scope.playerTable}));
+    //console.log(JSON.stringify({state: $scope.state, players: $scope.playerTable}));
     services.getSuggestions({state: $scope.state, players: $scope.playerTable}).then(processSuggestions);
 
   }
