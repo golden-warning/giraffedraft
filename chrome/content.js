@@ -47,8 +47,6 @@ function insertSidebarButton() {
   document.body.appendChild(toggler);
 }
 
-
-
 var undrafted = [];
 var suggestions = [];
 var drafted = [];
@@ -96,6 +94,13 @@ var sendQueue = function() {
   w.postMessage({queue: queue}, '*');
 };
 
+var sendAllStats = function() {
+  var w = document.querySelector('#giraffedraft').contentWindow;
+
+  //console.log("sending queue:", queue);
+  w.postMessage({allStats: allStats}, '*');
+};
+
 var clickPlayers = function() {
   document.querySelector('.NavTabs').childNodes[1].click();
 };
@@ -134,7 +139,6 @@ var getPlayers = function(cb) {
  //console.log(state);
   cb();
 };
-
 
 var updateState = function() {
   clickDraftResults();
@@ -190,18 +194,6 @@ var getPlayerStats = function(cb) {
     stats.playerName = playerName;
     allStats[playerRanking] = stats;
   });
-
-  // Optional: save stats to chrome.storage,
-  // re-save when out of date?
- //console.log(allStats);
-  // console.log(allStats.length);
-  // chrome.storage.local.set({allStats: allStats},
-  //   function() {chrome.storage.local.get('allStats',
-  //     function(data) {
-  //       console.log(data);
-  //     });
-  //   });
-  // chrome.storage.local.set({allStatsTimestamp: Date.now()}, function() {});
   cb();
 };
 
@@ -227,7 +219,6 @@ var scrapeDraftState = function(cb) {
   Array.prototype.slice.call(draft).forEach(scrapePlayerFromRBR);
 };
 
-
 // Scrapes queue state. Should be run on load.
 var scrapeQueue = function() {
   queue = {};
@@ -241,11 +232,11 @@ var scrapeQueue = function() {
   sendQueue();
 };
 
-
 var initialize = function(cb) {
   // Populates fantasy players into state
   //debugger;
   getPlayerStats(function() {
+    sendAllStats();
     getPlayers(function() {
      //console.log(state);
       setTimeout(function() {
